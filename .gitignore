@@ -1,14 +1,49 @@
-node_modules/
-.expo/
-dist/
+## Node
+node_modules
+package-lock.json
 npm-debug.*
+
+web-build
+
+
+## Expo
+.expo
+__generated__
+
+## VsCode
+.vscode/
+
+## Jetbrains
+.idea
+
+## MacOS
+.DS_Store
+
+# Emacs
+*~
+
+# Vim
+.*.swp
+.*.swo
+.*.swn
+.*.swm
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.xccheckout
+*.xcscmblueprint
+xcuserdata
+
+## Others
 *.jks
-*.p8
 *.p12
 *.key
 *.mobileprovision
-*.orig.*
-web-build/
-
-# macOS
-.DS_Store
+build/
+*.log
+.eslintcache
