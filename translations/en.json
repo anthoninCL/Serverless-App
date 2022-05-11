@@ -1,0 +1,94 @@
+{
+  "common": {
+    "fieldRequired": "Field is Mandatory",
+    "multipleSelection": "(multiple selection)",
+    "yes": "Yes",
+    "no": "No",
+    "noResult": "No result",
+    "loading": "Loading...",
+    "search": "Searching...",
+    "select": "Selected",
+    "reportUser": "Report user",
+    "legals": "Privacy policy",
+    "back": "Back",
+    "validate": "Validate",
+    "continue": "Continue"
+  },
+  "titlePages": {
+    "login": "Login"
+  },
+  "auth": {
+    "email": "Email",
+    "username": "Username",
+    "login": "Login",
+    "noAccountYet": "No account yet? ",
+    "createAccount": "Create account",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "passwordRules": "Password rules",
+    "invalidEmail": "Email invalid",
+    "emailAlreadyTaken": "Email already taken",
+    "pseudoAlreadyTaken":"Nickname already taken",
+    "alreadyHaveAnAccount": "Already have an account? ",
+    "logout": "Logout",
+    "register": "Register",
+    "signin": "Sign in",
+    "signinToYourAccount": "Sign in to your Club Manchot Account",
+    "signinSubtitle": "Welcome back! Sign in to your account to enjoy the collaboration with your friends and company",
+    "setUpAccount": "Set up your Club Manchot account.",
+    "setUpAccountExplanation": "You can create an account to start collaborating with your friends and company."
+  },
+  "terms": {
+    "agreeWith": "I agree with Club Manchot's ",
+    "terms": "Terms",
+    "and": " and ",
+    "privacyPolicy": "Privacy Policy.",
+    "pleaseAgree": " They don't exist for now but agree please."
+  },
+  "chat": {
+    "yourMessage": "Your message",
+    "noConversationYet": "You don't have conversations yet"
+  },
+  "calendar": {
+    "months": "Jan.,Feb.,Mar.,Apr.,May,Jun.,Jul.,Aug.,Sep.,Oct.,Nov.,Dec.",
+    "weekdays": "M,T,W,T,F,S,S",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "actions": {
+    "later": "Later",
+    "completeMyProfile": "Complete my profile",
+    "contact": "Contact",
+    "decline": "Decline",
+    "accept": "Accept",
+    "sayOk": "Ok",
+    "signal": "Signal",
+    "answer": "Answer",
+    "agree": "Alright",
+    "contactUs": "Contact us",
+    "register": "Subscribe",
+    "cancel": "Cancel",
+    "modify": "Modify"
+  },
+  "alertTitle": {
+    "evaluateMissingFields": "Please verify that both fields are complete",
+    "invalidCredentials": "Invalid credentials",
+    "beCareful": "Be careful",
+    "success": "Thanks",
+    "reportUserError": "Report user error",
+    "reportUserSuccess": "User reported",
+    "passwordInvalidFormat": "Invalid password format",
+    "registerSuccess": "Account created",
+    "error": "Error"
+  },
+  "alert": {
+    "missingFields": "Missing fields",
+    "passwordDontCorrespond": "Password don't correspond",
+    "invalidCredentials": "Email or password don't correspond. Please try again.",
+    "profileUpdated": "Your informations were been updated",
+    "reportUserError": "An error occurs when reporting user. Please try again later.",
+    "reportUserSuccess": "User successfully reported. Thanks for your help.",
+    "error": "An error occurs",
+    "registerSuccess": "Account successfully created."
+  }
+}

@@ -11,12 +11,14 @@ export type Theme = {
     transparent: string;
     dark: string;
     light: string;
+    lightHigh: string;
     greyLight: string;
     greyMedium: string;
     greyHigh: string;
     greenMedium: string;
     statusDangerHigh: string;
     statusWarningHigh: string;
+    blue: string;
   };
   sizings: {
     tiny: number;
@@ -28,6 +30,8 @@ export type Theme = {
     large: number;
     larger: number;
     high: number;
+    sz15: number;
+    sz25: number;
     sz50: number;
     sz60: number;
     sz95: number;
@@ -50,6 +54,7 @@ export type Theme = {
     larger: number;
     largest: number;
     huge: number;
+    fs15: number;
     fs18: number;
     fs30: number;
     fs40: number;
@@ -85,7 +90,7 @@ const getTheme = (width: number, height: number, scale: number): Theme => {
   };
   return {
     fonts: {
-      fontTitle: 'Montserrat_600SemiBold',
+      fontTitle: 'Roboto_600SemiBold',
       fontBasic: 'Roboto_400Regular',
       fontBody: 'Avenir',
     },
@@ -93,49 +98,54 @@ const getTheme = (width: number, height: number, scale: number): Theme => {
       transparent: 'transparent',
       dark: '#000000',
       light: '#ffffff',
-      greyLight: '#EBEBEB',
-      greyMedium: '#969696',
-      greyHigh: '#1D1C26',
+      lightHigh: '#868686',
+      greyLight: '#393939',
+      greyMedium: '#242424',
+      greyHigh: '#131313',
       greenMedium: '#42AA58',
       statusDangerHigh: '#B3003A',
       statusWarningHigh: '#EA8D01',
+      blue: '#5486E8'
     },
     sizings: {
-      tiny: normalize(2),
-      small: normalize(4),
-      smallMedium: normalize(8),
-      ten: normalize(10),
-      medium: normalize(12),
-      mediumLarge: normalize(16),
-      large: normalize(20),
-      larger: normalize(30),
-      high: normalize(40),
-      sz50: normalize(50),
-      sz60: normalize(60),
-      sz95: normalize(95),
-      sz120: normalize(120),
+      tiny: 2,
+      small: 4,
+      smallMedium: 8,
+      ten: 10,
+      medium: 12,
+      mediumLarge: 16,
+      large: 20,
+      larger: 30,
+      high: 40,
+      sz15: 15,
+      sz25: 25,
+      sz50: 50,
+      sz60: 60,
+      sz95: 95,
+      sz120: 120,
     },
     radius: {
-      small: normalize(4),
-      medium: normalize(10),
-      large: normalize(36),
-      rounded: normalize(30),
-      roundedBorders: normalize(34),
-      counter: normalize(25),
+      small: 4,
+      medium: 10,
+      large: 36,
+      rounded: 30,
+      roundedBorders: 34,
+      counter: 25,
     },
     fontSizes: {
-      tiny: normalizeFont(8),
-      small: normalizeFont(10),
-      default: normalizeFont(12),
-      medium: normalizeFont(14),
-      large: normalizeFont(16),
-      larger: normalizeFont(20),
-      largest: normalizeFont(24),
-      huge: normalizeFont(36),
-      fs18: normalizeFont(18),
-      fs30: normalizeFont(30),
-      fs40: normalizeFont(40),
-      fs50: normalizeFont(50),
+      tiny: 8,
+      small: 10,
+      default: 12,
+      medium: 14,
+      large: 16,
+      larger: 20,
+      largest: 24,
+      huge: 36,
+      fs15: 15,
+      fs18: 18,
+      fs30: 30,
+      fs40: 40,
+      fs50: 50,
     },
     normalize,
     normalizeFont,
