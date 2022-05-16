@@ -17,6 +17,7 @@ module.exports = function(api) {
             navigation: './src/navigation',
             screens: './src/screens',
             themes: './src/themes',
+            assets: './assets'
           },
           root: ['./src'],
         },

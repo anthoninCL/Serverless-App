@@ -1,6 +1,9 @@
 import React, { Suspense } from 'react';
 import { Text } from 'react-native';
 import { LoadingProvider } from 'providers/LoadingProvider';
+import { ThemeProvider } from 'providers/ThemeProvider';
+import { AuthProvider } from "providers/AuthProvider";
+import {AlertProvider} from "./providers/AlertProvider";
 
 type Props = {
   children: JSX.Element;
@@ -8,9 +11,15 @@ type Props = {
 
 const AppProvider = ({ children }: Props) => (
   <Suspense fallback={<Text />}>
-    <LoadingProvider>
-      {children}
-    </LoadingProvider>
+    <ThemeProvider>
+      <LoadingProvider>
+        <AlertProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </AlertProvider>
+      </LoadingProvider>
+    </ThemeProvider>
   </Suspense>
 );
 
