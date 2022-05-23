@@ -4,5 +4,39 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+
+    match /users/{userId} {
+      allow read: if isLogin();
+
+      allow write: if isOwner() || isAdmin();
+    }
+
+    match /roles/{userId} {
+    	allow read: if isLogin();
+
+      allow create: if (isOwner() && isValid()) || isAdmin();
+      allow update: if (isOwner() && isValid()) || isAdmin();
+      allow delete: if isOwner() || isAdmin();
+
+
+      /* Functions */
+      function isValid() {
+      	return 'role' in request.resource.data && request.resource.data.role == 'user';
+      }
+    }
+
+    /* Functions */
+
+    function isAdmin() {
+      return isLogin() && 'admin' in get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role;
+    }
+
+    function isOwner() {
+      return userId == request.auth.uid;
+    }
+
+    function isLogin() {
+      return request.auth != null
+    }
   }
 }
