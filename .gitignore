@@ -41,6 +41,7 @@ xcuserdata
 
 ## Others
 *.jks
+*.p8
 *.p12
 *.key
 *.mobileprovision
