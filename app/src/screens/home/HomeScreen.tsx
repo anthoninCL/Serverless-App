@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from 'navigation/RootStackParamList';
+import { RootStackParamList } from 'navigation/RootStackParamLis';
 import {MainLayout} from "../../components/layouts/MainLayout/MainLayout";
 import {MessageComponent} from "../../components/common/ChatMessage/ChatMessage";
 import {Message} from "../../types/Message";
@@ -9,8 +9,11 @@ import {User} from "../../types/User";
 import dayjs from "dayjs";
 import {GiftedChat, IMessage, Send} from "react-native-gifted-chat";
 import {Icon} from "../../components/common/Icon/Icon";
+import {Team} from "../../types/Team";
+import {Channel} from "../../types/Channel";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
+
 
 // TODO DELETE FAKE DATAS
 
@@ -20,21 +23,24 @@ const users: User[] = [
     email: "email@gmail.com",
     name: "Toto",
     firstName: "Utilisateur",
-    lastName: "1"
+    lastName: "1",
+    photo: undefined,
   },
   {
     id: "2",
     email: "email2@gmail.com",
     name: "Bobby",
     firstName: "Utilisateur",
-    lastName: "2"
+    lastName: "2",
+    photo: undefined,
   },
   {
     id: "3",
     email: "email2@gmail.com",
     name: "Marcus",
     firstName: "Utilisateur",
-    lastName: "2"
+    lastName: "2",
+    photo: undefined,
   },
 ];
 
@@ -77,6 +83,24 @@ const exampleMessages: Message[] = [
 ]
 
 const HomeScreen = ({ navigation }: ScreenProps) => {
+  const [currentTeam, setCurrentTeam] = useState(0);
+  const [isCurrentConvPrivate, setCurrentConvPrivacy] = useState(false);
+  const [currentConv, setCurrentConv] = useState(0);
+  const firstTeam: Team = {
+    id: '1',
+    name: 'Watchelp',
+    members: null,
+    channels: null,
+    photo: ''
+  };
+  const secondTeam: Team = {
+    id: '2',
+    name: 'Juloa',
+    members: null,
+    channels: null,
+    photo: ''
+  };
+  const teams = [firstTeam, secondTeam];
   //const {theme} = useTheme();
   //const styles = fnStyles(theme);
   const conversationMessages = exampleMessages; // TODO : get les messages de la conversation
@@ -117,7 +141,8 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   }
 
   return (
-    <MainLayout>
+    <MainLayout currentTeam={currentTeam} isCurrentConvPrivate={isCurrentConvPrivate} currentConv={currentConv}
+                onTeamClicked={setCurrentTeam} setCurrentConvPrivacy={setCurrentConvPrivacy} onConvClicked={setCurrentConv} teams={teams}>
       <GiftedChat
         messages={messages}
         onSend={messages => onMessageSend(messages)}

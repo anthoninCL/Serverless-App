@@ -21,7 +21,7 @@ export const ClickableIcon = (props: Props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.container, props.style]}
+      style={props.style}
       onPress={props.onPress}
     >
       <Icon
