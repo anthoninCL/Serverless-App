@@ -32,6 +32,7 @@ export type Theme = {
     high: number;
     sz15: number;
     sz25: number;
+    sz35: number;
     sz50: number;
     sz60: number;
     sz95: number;
@@ -119,6 +120,7 @@ const getTheme = (width: number, height: number, scale: number): Theme => {
       high: 40,
       sz15: 15,
       sz25: 25,
+      sz35: 35,
       sz50: 50,
       sz60: 60,
       sz95: 95,
