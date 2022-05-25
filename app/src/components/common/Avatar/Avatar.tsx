@@ -19,7 +19,6 @@ import fnStyles from "./AvatarStyle";
 import { Icon } from "../Icon/Icon";
 import { Types } from "../../../types/Types";
 import AnonymeMan from "assets/man.png";
-import AnonymeWoman from "assets/woman.png";
 import * as ImagePicker from "expo-image-picker";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -54,7 +53,6 @@ type Props = {
   iconSizeName?: FontSizeType | undefined;
   iconColorName?: ColorType;
   iconPosition?: Types["iconPosition"];
-  isWoman?: boolean;
   isImageUploader?: boolean;
   /* value?: number;
   color?: string; */
@@ -65,7 +63,7 @@ export const Avatar = (props: Props) => {
   const { theme } = useTheme();
 
   const {
-    image = props.isWoman ? AnonymeWoman : AnonymeMan,
+    image = AnonymeMan,
     sizeName = "sz95",
     style,
     iconType,
@@ -116,14 +114,14 @@ export const Avatar = (props: Props) => {
             {
               width: theme.sizings[sizeName],
               height: theme.sizings[sizeName],
-              borderRadius: theme.sizings[sizeName] / 2,
+              borderRadius: theme.sizings[sizeName] / 5,
             },
           ]}
         >
           {image !== undefined && (
             <ImageBackground
               source={image}
-              resizeMode="cover"
+              resizeMode="contain"
               style={{
                 width: "100%",
                 height: "100%",
