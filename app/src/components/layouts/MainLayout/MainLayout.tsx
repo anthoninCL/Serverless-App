@@ -2,12 +2,13 @@ import React from 'react';
 import {Image, View, Text} from 'react-native';
 import {ViewCol, ViewRow} from '../FlexLayout/FlexViews';
 import {User} from "types/User";
+import {Team} from "types/Team";
 
 // TODO Pass the team
 type Props = {
   children?: React.ReactNode;
   user?: User;
-  // team?: Team;
+  team?: Team;
 };
 
 // TODO Apply Team's info to the layout
@@ -24,7 +25,7 @@ export const MainLayout = (props: Props) => {
         <View style={{width: 35, height: 35, borderRadius: 35/3, backgroundColor: 'red'}}/>
       </ViewRow>
       <ViewRow align={"center"} justify={"center"} style={{flex: 1}}>
-        <ViewRow style={{height: '100%', width: '17%', minWidth: 150, backgroundColor: '#1C1C24'}}>
+        <ViewRow style={{height: '100%', width: '17%', minWidth: 150, backgroundColor: '#171630'}}>
           <ViewCol justify={"center"} style={{height: '100%', width: '20%', minWidth: 50, borderTopWidth: 1, borderTopColor: '#393939'}}>
             <Text>Team</Text>
           </ViewCol>
