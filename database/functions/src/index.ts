@@ -1,10 +1,16 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import * as express from 'express';
+import { authenticationRouter, userRouter } from "./routes";
+import cors = require("cors");
+import * as bodyParser from "body-parser";
 
-admin.initializeApp();
+const app = express();
 
-export const helloWorld = functions.region("europe-west1").https.onRequest(async (request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
-  await admin.firestore().collection('test').add({ testMessage: "some message" });
-  response.send("Hello from Firebase!");
-});
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/api/v1", authenticationRouter);
+app.use("/api/v1", userRouter);
+
+export const webApi = functions.region("europe-west1").https.onRequest(app);
