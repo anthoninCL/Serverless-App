@@ -11,6 +11,7 @@ export type Theme = {
     transparent: string;
     dark: string;
     light: string;
+    lightHighPlus: string;
     lightHigh: string;
     greyLight: string;
     greyMedium: string;
@@ -99,6 +100,7 @@ const getTheme = (width: number, height: number, scale: number): Theme => {
       transparent: 'transparent',
       dark: '#000000',
       light: '#ffffff',
+      lightHighPlus: '#B6B6B6',
       lightHigh: '#868686',
       greyLight: '#393939',
       greyMedium: '#242424',

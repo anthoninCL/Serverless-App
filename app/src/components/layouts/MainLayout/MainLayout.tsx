@@ -8,6 +8,7 @@ import {Friend} from "../../../types/Friend";
 import {TeamLayout} from "./TeamLayout";
 import {Avatar} from "../../common/Avatar/Avatar";
 import {CurrentTeamLayout} from "./CurrentTeamLayout";
+import {ConvLayout} from "./ConvLayout";
 
 // TODO Pass the team
 type Props = {
@@ -45,8 +46,7 @@ export const MainLayout = (props: Props) => {
           <TeamLayout onTeamClicked={props.onTeamClicked} teams={props.teams} currentTeam={props.currentTeam} />
           <ViewCol style={{height: '100%', borderWidth: 1, borderBottomWidth: 0, borderColor: '#393939'}}>
             <CurrentTeamLayout team={props.teams[props.currentTeam]}/>
-            <Text>Channel</Text>
-            <Text>Channel</Text>
+            <ConvLayout setCurrentConvPrivacy={props.setCurrentConvPrivacy} onConvClicked={props.onConvClicked} channels={props.channels} friends={props.friends} currentConv={props.currentConv} isCurrentConvPrivate={props.isCurrentConvPrivate} />
           </ViewCol>
         </ViewRow>
         <ViewRow style={{flex: 1, height: '100%', backgroundColor: '#FFF'}}>
