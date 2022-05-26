@@ -52,7 +52,7 @@ export const MainLayout = (props: Props) => {
         paddingVertical: 10
       }}>
         <View/>
-        <Text style={{color: '#FFF', fontWeight: "600"}}>Club Manchot | Team | Channel</Text>
+        <Text style={{color: '#FFF', fontWeight: "600"}}>Club Manchot | {props.teams[props.currentTeam]?.name} | {props.isCurrentConvPrivate ? (typeof props.friends[props.currentConv].friendId === 'string' ? props.friends[props.currentConv].friendId : props.friends[props.currentConv].friendId.name) : props.channels[props.currentConv]?.name}</Text>
         <TouchableOpacity onPress={onProfilePicClicked}>
           <Avatar sizeName={"sz35"}/>
         </TouchableOpacity>
