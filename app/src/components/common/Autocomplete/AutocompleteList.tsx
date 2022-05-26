@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { StyleProp, ViewStyle, View } from "react-native";
 import fnStyles from "./AutocompleteListStyle";
 import useTheme from "hooks/useTheme";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type Props = {
   style?: StyleProp<ViewStyle>;
@@ -40,7 +41,11 @@ export const AutocompleteList = (props: Props) => {
         data={filteredData}
         onChangeText={(text) => setSearch(text)}
         flatListProps={{
-          renderItem: ({ item }) => <Text>{item}</Text>,
+          renderItem: ({ item }) => (
+            <TouchableOpacity>
+              <Text>{item}</Text>
+            </TouchableOpacity>
+          ),
         }}
       />
     </View>
