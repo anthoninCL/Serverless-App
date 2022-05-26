@@ -5,7 +5,6 @@ export default (theme: Theme) =>
   StyleSheet.create({
     dividerHorizontal: {
       borderBottomWidth: 1,
-      marginVertical: theme.sizings.medium,
     },
     dividerVertical: {
       borderRightWidth: 1,

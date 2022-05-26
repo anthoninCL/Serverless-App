@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { User } from '../types/User';
+import {removeStoredData} from "../utils/fnAsyncStorage";
 
 type Auth = {
   user?: User;
@@ -35,7 +36,8 @@ export const AuthProvider = ({ children }: Props) => {
   );
 
   const signout = useCallback(
-    async (userId?: string | number) => {
+    async () => {
+      await removeStoredData('token');
     },
     [],
   );

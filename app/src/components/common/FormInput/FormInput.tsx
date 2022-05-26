@@ -44,6 +44,7 @@ type Props = {
   maxLength?: number;
   secure?: boolean;
   selectionColorName?: ColorType;
+  backgroundColor?: string;
   meta?: FieldMetaState<string | boolean | object>;
 };
 
@@ -68,6 +69,7 @@ export const FormInput = ({
   editable,
   maxLength,
   secure,
+  backgroundColor,
   selectionColorName = 'greyMedium',
   meta,
 }: Props) => {
@@ -128,10 +130,11 @@ export const FormInput = ({
               paddingVertical: multiline ? theme.sizings.smallMedium : 0,
               paddingRight: theme.sizings.sz50,
               paddingLeft: theme.sizings.medium,
-              color: theme.colors.light,
+              color: backgroundColor === 'white' ? '#000' : theme.colors.light,
               fontSize: theme.fontSizes.large
             },
             inline ? { flex: 1 } : null,
+            { backgroundColor: backgroundColor ?? '#242424'}
           ]}
           onChangeText={onChange}
           value={value}
