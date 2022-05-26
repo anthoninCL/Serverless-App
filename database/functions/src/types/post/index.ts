@@ -1,5 +1,7 @@
 export type Post = {
-  id: string;
   title: string;
-  message: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  user: string;
 }

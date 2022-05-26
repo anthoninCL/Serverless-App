@@ -14,7 +14,14 @@
     "validate": "Validate",
     "continue": "Continue",
     "workspaceName": "Workspace Name",
-    "create": "Create"
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "channelName": "Channel Name",
+    "username": "Username",
+    "add": "Ajouter",
+    "firstName": "FirstName",
+    "lastName": "LastName"
   },
   "titlePages": {
     "login": "Login"

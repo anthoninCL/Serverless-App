@@ -12,6 +12,7 @@ import { Team } from "../../types/Team";
 import { Channel } from "../../types/Channel";
 import { Friend } from "../../types/Friend";
 import { ViewCol } from "../../components/layouts/FlexLayout/FlexViews";
+import useAuth from "../../hooks/useAuth";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
 
@@ -86,6 +87,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   const [currentTeam, setCurrentTeam] = useState(0);
   const [isCurrentConvPrivate, setCurrentConvPrivacy] = useState(false);
   const [currentConv, setCurrentConv] = useState(0);
+  const { signout } = useAuth();
   const firstTeam: Team = {
     id: '1',
     name: 'Watchelp',
@@ -197,21 +199,37 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
 
   }
 
-  const navigateToProfile = () => {
+  // TODO move the two next functions to AuthProvider
+  const signOut = () => {
+    signout();
     navigation.reset({
       index: 0,
-      routes: [{ name: 'login' }],
+      routes: [{ name: 'login'}],
     });
   };
 
-  // TODO move the two next functions to AuthProvider
-  const signOut = () => {
-
-  };
-
   const deleteAccount = () => {
-
+    // deleteAccount(currentUser.id);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'login'}],
+    });
   };
+
+  // TODO remove comments when authentication is on
+  /*useEffect(() => {
+    const checkToken = async () => {
+      const token = await getStoredData('token');
+      if (!token) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'login'}],
+        });
+      }
+    }
+
+    checkToken().catch(console.error);
+  }, []);*/
 
   return (
     <MainLayout
@@ -225,7 +243,6 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
       channels={channels}
       friends={friends}
       currentUser={currentUser}
-      navigateToProfile={navigateToProfile}
       signOut={signOut}
       deleteAccount={deleteAccount}
     >

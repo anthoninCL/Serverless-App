@@ -1,20 +1,23 @@
-import admin, { db, groupCollection } from '../firebase-service';
-import { Request, Response } from "express";
+import admin, {db, groupCollection} from "../firebase-service";
+import {NextFunction, Request, Response} from "express";
 
-export async function isAuthenticated(req: Request, res: Response, next: Function) {
-  const { authorization } = req.headers
+export async function isAuthenticated(req: Request, res: Response, next: NextFunction) {
+  const {authorization} = req.headers;
 
-  if (!authorization)
-    return res.status(401).send({ message: 'Unauthorized' });
+  if (!authorization) {
+    return res.status(401).send({message: "Unauthorized"});
+  }
 
-  if (!authorization.startsWith('Bearer'))
-    return res.status(401).send({ message: 'Unauthorized' });
+  if (!authorization.startsWith("Bearer")) {
+    return res.status(401).send({message: "Unauthorized"});
+  }
 
-  const split = authorization.split('Bearer ')
-  if (split.length !== 2)
-    return res.status(401).send({ message: 'Unauthorized' });
+  const split = authorization.split("Bearer ");
+  if (split.length !== 2) {
+    return res.status(401).send({message: "Unauthorized"});
+  }
 
-  const token = split[1]
+  const token = split[1];
 
   try {
     const decodedToken: admin.auth.DecodedIdToken = await admin.auth().verifyIdToken(token);
@@ -23,20 +26,24 @@ export async function isAuthenticated(req: Request, res: Response, next: Functio
     const roles: string[] = [];
 
     groups.forEach(
-      (doc)=>{
-        if (doc.data().members.includes(decodedToken.uid)) {
-          console.log("roles found", ...doc.data().roles);
-          roles.push(...doc.data().roles);
-        }
-      }
+        (doc) => {
+          if (doc.data().members.includes(decodedToken.uid)) {
+            console.log("roles found", ...doc.data().roles);
+            roles.push(...doc.data().roles);
+          }
+        },
     );
 
     console.log("roles", roles);
-    res.locals = { ...res.locals, uid: decodedToken.uid, roles: roles, email: decodedToken.email }
+    res.locals = {
+      ...res.locals,
+      uid: decodedToken.uid,
+      roles: roles,
+      email: decodedToken.email,
+    };
     return next();
-  }
-  catch (err) {
-    console.error(err)
-    return res.status(401).send({ message: 'Unauthorized' });
+  } catch (err) {
+    console.error(err);
+    return res.status(401).send({message: "Unauthorized"});
   }
 }

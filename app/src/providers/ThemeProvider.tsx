@@ -38,6 +38,7 @@ export type Theme = {
     sz60: number;
     sz95: number;
     sz120: number;
+    avatar: number;
   };
   radius: {
     small: number;
@@ -127,6 +128,7 @@ const getTheme = (width: number, height: number, scale: number): Theme => {
       sz60: 60,
       sz95: 95,
       sz120: 120,
+      avatar: 200,
     },
     radius: {
       small: 4,
