@@ -3,6 +3,6 @@ export type Group = {
   description: string;
   createdAt: Date;
   updatedAt: Date;
-  roles: String[];
-  members: String[];
+  roles: string[];
+  members: string[];
 }
