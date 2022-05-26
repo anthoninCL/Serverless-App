@@ -1,6 +1,6 @@
 export type friend = {
-  friendId: string;
-  userId: string;
+  users: [string, string];
   createdAt: Date;
   updatedAt: Date;
+  messages: [string];
 }

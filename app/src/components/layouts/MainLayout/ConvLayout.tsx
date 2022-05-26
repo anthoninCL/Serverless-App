@@ -6,6 +6,8 @@ import useTheme from "../../../hooks/useTheme";
 import {ClickableIcon} from "../../common/ClickableIcon/ClickableIcon";
 import {Channel} from "../../../types/Channel";
 import {Friend} from "../../../types/Friend";
+import {CreateChannelModal} from "../../modals/CreateChannelModal";
+import {CreateFriendModal} from "../../modals/CreateFriendModal";
 
 type Props = {
   channels?: Channel[];
@@ -20,6 +22,16 @@ export const ConvLayout = (props: Props) => {
   const {theme} = useTheme();
   const [channelsOpen, setChannelsOpen] = useState(true);
   const [friendsOpen, setFriendsOpen] = useState(true);
+  const [isChannelModalVisible, setChannelModalVisibility] = useState(false);
+  const [isFriendModalVisible, setFriendModalVisibility] = useState(false);
+
+  const toggleChannelModal = () => {
+    setChannelModalVisibility(!isChannelModalVisible);
+  };
+
+  const toggleFriendModal = () => {
+    setFriendModalVisibility(!isFriendModalVisible);
+  };
 
   const selectConv = (key: number, isPrivate: boolean) => {
     props.setCurrentConvPrivacy(isPrivate);
@@ -52,8 +64,7 @@ export const ConvLayout = (props: Props) => {
           <TouchableOpacity onPress={() => {
           }} style={{paddingVertical: 5, paddingHorizontal: 15}}>
               <ViewRow align={"center"}>
-                  <ClickableIcon type={"Entypo"} name={"plus"} onPress={() => {
-                  }} colorName={"lightHighPlus"} sizeName={'larger'} style={{ backgroundColor: '#32324A', width: 25, height: 25, borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}/>
+                  <ClickableIcon type={"Entypo"} name={"plus"} onPress={toggleChannelModal} colorName={"lightHighPlus"} sizeName={'larger'} style={{ backgroundColor: '#32324A', width: 25, height: 25, borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}/>
                   <Text style={{color: theme.colors.lightHighPlus, fontSize: theme.fontSizes.large, marginLeft: 5, marginTop: 4}}>Add channels</Text>
               </ViewRow>
           </TouchableOpacity>
@@ -78,13 +89,14 @@ export const ConvLayout = (props: Props) => {
             <TouchableOpacity onPress={() => {
             }} style={{paddingVertical: 5, paddingHorizontal: 15}}>
                 <ViewRow align={"center"}>
-                    <ClickableIcon type={"Entypo"} name={"plus"} onPress={() => {
-                    }} colorName={"lightHighPlus"} sizeName={'larger'} style={{ backgroundColor: '#32324A', width: 25, height: 25, borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}/>
+                    <ClickableIcon type={"Entypo"} name={"plus"} onPress={toggleFriendModal} colorName={"lightHighPlus"} sizeName={'larger'} style={{ backgroundColor: '#32324A', width: 25, height: 25, borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}/>
                     <Text style={{color: theme.colors.lightHighPlus, fontSize: theme.fontSizes.large, marginLeft: 5, marginTop: 4}}>Add friends</Text>
                 </ViewRow>
             </TouchableOpacity>
         }
       </ViewCol>
+      <CreateChannelModal isVisible={isChannelModalVisible} onBackDropPress={toggleChannelModal}/>
+      <CreateFriendModal isVisible={isFriendModalVisible} onBackDropPress={toggleFriendModal}/>
     </ScrollView>
   );
 };
