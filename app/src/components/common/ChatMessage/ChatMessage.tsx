@@ -8,6 +8,8 @@ import { User } from "../../../types/User";
 import dayjs from "dayjs";
 import { MessageContent } from "./ChatContent";
 import { ViewRow } from "../../layouts/FlexLayout/FlexViews";
+import {Button} from "../Button/Button";
+import {Icon} from "../Icon/Icon";
 //import {Avatar} from "../Avatar/Avatar";
 
 

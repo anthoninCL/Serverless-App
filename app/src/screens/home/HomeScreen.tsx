@@ -1,17 +1,17 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/RootStackParamLis';
-import {MainLayout} from "../../components/layouts/MainLayout/MainLayout";
-import {MessageComponent} from "../../components/common/ChatMessage/ChatMessage";
-import {Message} from "../../types/Message";
-import {User} from "../../types/User";
+import { MainLayout } from "../../components/layouts/MainLayout/MainLayout";
+import { MessageComponent } from "../../components/common/ChatMessage/ChatMessage";
+import { Message } from "../../types/Message";
+import { User } from "../../types/User";
 import dayjs from "dayjs";
-import {GiftedChat, IMessage, Send} from "react-native-gifted-chat";
-import {Icon} from "../../components/common/Icon/Icon";
-import {Team} from "../../types/Team";
-import {Channel} from "../../types/Channel";
-import {Friend} from "../../types/Friend";
+import { GiftedChat, IMessage } from "react-native-gifted-chat";
+import { Team } from "../../types/Team";
+import { Channel } from "../../types/Channel";
+import { Friend } from "../../types/Friend";
+import { ViewCol } from "../../components/layouts/FlexLayout/FlexViews";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
 
@@ -159,7 +159,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   useEffect(() => {
     const prepareMessages = conversationMessages?.map((message: Message, index: number) => {
       return {
-        _id: `old_${index}`,
+        _id: `old_${index}`, // TODO : mettre l'id du message
         text: message.content,
         createdAt: dayjs(message.createdAt).toDate(),
         user: {
@@ -183,13 +183,18 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   }, []);
 
   const renderMessage = (props) => {
-    return <MessageComponent
-      previousMessage={props.previousMessage}
-      currentMessage={props.currentMessage}
-      nextMessage={props.nextMessage }
-      // TODO: regarder si le message est un post ou non pour changer la couleur
-      backgroundColor={props.currentMessage.user._id === users[0].id ? "#E4E4E4" : "white"}
-    />
+    return <View>
+      <ViewCol>
+        <MessageComponent
+          previousMessage={props.previousMessage}
+          currentMessage={props.currentMessage}
+          nextMessage={props.nextMessage }
+          // TODO: regarder si le message est un post ou non pour changer la couleur
+          backgroundColor={props.currentMessage.user._id === users[0].id ? "#E4E4E4" : "white"}
+        />
+      </ViewCol>
+    </View>
+
   }
 
   const navigateToProfile = () => {

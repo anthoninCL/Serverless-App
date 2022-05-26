@@ -18,6 +18,9 @@ import {
 import {User} from "../../../types/User";
 
 import { userIsSame, dayIsTheSame } from "./ChatMessage";
+import {Button} from "../Button/Button";
+import {Icon} from "../Icon/Icon";
+import {ViewCol, ViewRow} from "../../layouts/FlexLayout/FlexViews";
 
 type Props = {
   touchableProps?: object;
@@ -59,6 +62,10 @@ export const MessageContent = (props: Props) => {
       } = props
       return (
         <MessageText
+          containerStyle={{
+            left: {width: '100%'},
+            right: {}
+          }}
           {...messageTextProps}
         />
       )
@@ -114,12 +121,25 @@ export const MessageContent = (props: Props) => {
       <TouchableOpacity
         accessibilityLabel='text'
         {...props.touchableProps}
+        style={{width: '100%'}}
       >
         <View style={[styles.wrapper, props.wrapperStyle]}>
-          <>
             {messageHeader}
-            {renderMessageText()}
-          </>
+            <ViewRow justify={"space-between"} >
+              <View style={{ flex: 1, flexGrow: 1, alignItems: 'flex-start'}}>
+                {renderMessageText()}
+              </View>
+              <View style={{ flex: 0, flexDirection: "row", justifyContent: "flex-end", alignItems: 'center'}}>
+                <ViewRow style={{ paddingRight: 10, }}>
+                  <Button onPress={() => console.log("Edit message id : ", props.currentMessage)}>
+                    <Icon name={"pencil"}/>
+                  </Button>
+                  <Button onPress={() => console.log("Delete message id : ", props.currentMessage._id)}>
+                    <Icon name={"trash"} colorName={"statusDangerHigh"}/>
+                  </Button>
+                </ViewRow>
+              </View>
+            </ViewRow>
         </View>
       </TouchableOpacity>
     </View>
