@@ -13,6 +13,7 @@ import { Channel } from "../../types/Channel";
 import { Friend } from "../../types/Friend";
 import { ViewCol } from "../../components/layouts/FlexLayout/FlexViews";
 import useAuth from "../../hooks/useAuth";
+import {ChatHeaderLayout} from "../../components/layouts/ChatHeaderLayout/ChatHeaderLayout";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
 

@@ -11,6 +11,7 @@ import {CurrentTeamLayout} from "./CurrentTeamLayout";
 import {ConvLayout} from "./ConvLayout";
 import {UserModal} from "../../modals/UserModal";
 import {UpdateProfileModal} from "../../modals/UpdateProfileModal";
+import {ChatHeaderLayout} from "../ChatHeaderLayout/ChatHeaderLayout";
 
 type Props = {
   children?: React.ReactNode;
@@ -73,7 +74,10 @@ export const MainLayout = (props: Props) => {
             </ViewCol>
           </ViewRow>
           <ViewRow style={{flex: 1, height: '100%', backgroundColor: '#FFF'}}>
-            {props.children}
+            <ViewCol>
+              <ChatHeaderLayout {...props} />
+              {props.children}
+            </ViewCol>
           </ViewRow>
         </ViewRow>
         <UserModal currentUser={props.currentUser} isModalVisible={isUserModalVisible} navigateToProfile={toggleProfileModalVisible} deleteAccount={props.deleteAccount} signOut={props.signOut} />
