@@ -44,6 +44,11 @@ export const AutocompleteList = (props: Props) => {
       const tmpList = [...selectedList];
       tmpList.push(item);
       setSelectedList(tmpList);
+      const tmpListFiltered = [...filteredData];
+      const idx = tmpListFiltered.indexOf(item);
+      tmpListFiltered.splice(idx, 1);
+      tmpListFiltered.unshift(item);
+      setFilteredData(tmpListFiltered);
     } else {
       const tmpList = [...selectedList];
       tmpList.splice(idx, 1);

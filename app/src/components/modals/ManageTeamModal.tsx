@@ -7,6 +7,7 @@ import { ClickableIcon } from "../common/ClickableIcon/ClickableIcon";
 import { FormInput } from "../common/FormInput/FormInput";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 import { Team } from "../../types/Team";
+import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
 
 type Props = {
   isVisible: boolean;
@@ -65,7 +66,10 @@ export const ManageTeamModal = (props: Props) => {
           placeholderKey={"common.workspaceName"}
           style={{ marginBottom: 20 }}
         />
-        <Text>LUCAS FDP METS TON MULTISELECT USER ICI</Text>
+        <AutocompleteList
+          data={["Thomas", "Mathieux", "Antho la merde", "Lucas le roi "]}
+          isMultiSelect
+        />
         <ViewRow
           justify={"space-between"}
           align={"center"}
