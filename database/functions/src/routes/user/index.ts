@@ -1,5 +1,5 @@
 import { Router } from "express";
-import admin, { db, userCollection } from "../../firebase-service";
+import admin, { db, groupCollection, userCollection } from "../../firebase-service";
 import { User } from "../../types";
 import { userIdRouter } from "./[id]";
 import { isAuthenticated } from "../../middlewares/authenticate";
@@ -9,7 +9,6 @@ import { isAuthorized } from "../../middlewares/authorize";
 export const userRouter = Router();
 
 userRouter.use("/user", isAuthenticated);
-userRouter.use("/user", isAuthorized({ hasRole: ['admin'] }));
 userRouter.use("/user", userIdRouter);
 
 userRouter.get("/user", async (req, res) => {
@@ -30,7 +29,7 @@ userRouter.get("/user", async (req, res) => {
   }
 });
 
-userRouter.post("/user", async (req, res) => {
+userRouter.post("/user", isAuthorized({ hasRole: ['admin'] }), async (req, res) => {
   try {
     const user: User = {
       name: req.body.name,
@@ -49,10 +48,14 @@ userRouter.post("/user", async (req, res) => {
     }).then(async (userRecord) => {
       console.log("Successfully created new user:", userRecord.uid);
       await db.collection(userCollection).doc(userRecord.uid).set(user);
+      await db.collection(groupCollection).doc("users").update({
+        updatedAt: new Date(),
+        members: admin.firestore.FieldValue.arrayUnion(userRecord.uid)
+      });
       console.log("User added to database");
       res.status(201).send(`Created a new user: ${userRecord.uid}`);
     }).catch((error) => {
-      res.status(500).send("Error:" + error);
+      res.status(500).send(error);
     });
   } catch (error) {
     res.status(400).send(`User should contain name, firstName, lastName, email, password and photo!`)

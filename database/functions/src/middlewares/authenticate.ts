@@ -1,4 +1,4 @@
-import admin from '../firebase-service';
+import admin, { db, groupCollection } from '../firebase-service';
 import { Request, Response } from "express";
 
 export async function isAuthenticated(req: Request, res: Response, next: Function) {
@@ -18,12 +18,25 @@ export async function isAuthenticated(req: Request, res: Response, next: Functio
 
   try {
     const decodedToken: admin.auth.DecodedIdToken = await admin.auth().verifyIdToken(token);
-    console.log("decodedToken", JSON.stringify(decodedToken))
-    res.locals = { ...res.locals, uid: decodedToken.uid, role: decodedToken.role, email: decodedToken.email }
+    console.log("decodedToken", JSON.stringify(decodedToken));
+    const groups = await db.collection(groupCollection).get();
+    const roles: string[] = [];
+
+    groups.forEach(
+      (doc)=>{
+        if (doc.data().members.includes(decodedToken.uid)) {
+          console.log("roles found", ...doc.data().roles);
+          roles.push(...doc.data().roles);
+        }
+      }
+    );
+
+    console.log("roles", roles);
+    res.locals = { ...res.locals, uid: decodedToken.uid, roles: roles, email: decodedToken.email }
     return next();
   }
   catch (err) {
-    console.error(`${err.code} - ${err.message}`)
+    console.error(err)
     return res.status(401).send({ message: 'Unauthorized' });
   }
 }
