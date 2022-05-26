@@ -5,6 +5,7 @@ import useTheme from 'hooks/useTheme';
 import { useTranslation } from 'react-i18next';
 import { RootStackParamList } from './RootStackParamList';
 import RegisterScreen from "../screens/auth/register/RegisterScreen";
+import HomeScreen from "../screens/home/HomeScreen";
 
 const MainStack = createStackNavigator<RootStackParamList>();
 
@@ -14,6 +15,13 @@ export const RootStack = () => {
 
   return (
     <MainStack.Navigator>
+      <MainStack.Screen
+        name="home"
+        component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <MainStack.Screen
         name="login"
         component={LoginScreen}
