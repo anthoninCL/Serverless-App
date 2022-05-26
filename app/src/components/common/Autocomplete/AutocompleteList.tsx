@@ -3,6 +3,8 @@ import Autocomplete from "react-native-autocomplete-input";
 import { Text } from "react-native";
 import { useEffect } from "react";
 import { StyleProp, ViewStyle, View } from "react-native";
+import fnStyles from "./AutocompleteListStyle";
+import useTheme from "hooks/useTheme";
 
 type Props = {
   style?: StyleProp<ViewStyle>;
@@ -12,6 +14,9 @@ type Props = {
 export const AutocompleteList = (props: Props) => {
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
+
+  const { theme } = useTheme();
+  const styles = fnStyles(theme);
 
   const { style, data } = props;
 
@@ -31,6 +36,7 @@ export const AutocompleteList = (props: Props) => {
   return (
     <View style={style}>
       <Autocomplete
+        listContainerStyle={styles.listStyle}
         data={filteredData}
         onChangeText={(text) => setSearch(text)}
         flatListProps={{
