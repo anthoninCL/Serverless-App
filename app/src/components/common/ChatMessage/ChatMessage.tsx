@@ -1,17 +1,17 @@
 /* eslint-disable no-underscore-dangle, no-use-before-define */
 
-import PropTypes from 'prop-types'
 import React from 'react'
-import { View, ViewPropTypes, StyleSheet, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import {Avatar, Day, IMessage, utils} from 'react-native-gifted-chat'
+import { Avatar, Day, IMessage } from 'react-native-gifted-chat'
 import { User } from "../../../types/User";
-// import Bubble from './SlackBubble'
 import dayjs from "dayjs";
-import {MessageContent} from "./ChatContent";
+import { MessageContent } from "./ChatContent";
+import { ViewRow } from "../../layouts/FlexLayout/FlexViews";
+//import {Avatar} from "../Avatar/Avatar";
 
 
-const dayIsTheSame = (currentMessage: IMessage, compareMessage: IMessage) => {
+export const dayIsTheSame = (currentMessage: IMessage, compareMessage: IMessage) => {
   if (compareMessage && compareMessage.createdAt) {
     const currentMessageCreationDate = dayjs(currentMessage.createdAt);
     const compareMessageCreationDate = dayjs(currentMessage.createdAt);
@@ -23,7 +23,7 @@ const dayIsTheSame = (currentMessage: IMessage, compareMessage: IMessage) => {
   return false;
 }
 
-const userIsSame = (currentMessage, compareMessage) => {
+export const userIsSame = (currentMessage, compareMessage) => {
   return !!(
     compareMessage &&
     compareMessage.user &&
@@ -32,18 +32,11 @@ const userIsSame = (currentMessage, compareMessage) => {
 }
 
 type Props = {
-  renderAvatar?: (value: any) => void;
-  renderBubble?: (value: any) => void;
-  renderDay?: (value: any) => void;
   currentMessage?: IMessage;
   nextMessage?: IMessage;
   previousMessage?: IMessage;
-  user?: User; // Type User
-  /*  containerStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
- */
+  user?: User;
+  backgroundColor?: string;
 }
 
 export const MessageComponent = (props: Props) => {
@@ -57,65 +50,36 @@ export const MessageComponent = (props: Props) => {
     }
   }
 
-  const renderTime = () => {
-    if (props.currentMessage.createdAt) {
-      const dayProps = getInnerComponentProps()
-      if (props.renderDay) {
-        return props.renderDay(dayProps)
-      }
-      return <Day {...dayProps} />
-    }
-    return null
-  }
-
-  const renderBubble = () => {
-    const bubbleProps = getInnerComponentProps()
-    if (props.renderBubble) {
-      return props.renderBubble(bubbleProps)
-    }
-    return <MessageContent {...bubbleProps} />
-  }
-
-  /*
   const renderAvatar = () => {
-    let extraStyle
-    if (
-      userIsSame(props.currentMessage, props.previousMessage) &&
-      dayIsTheSame(props.currentMessage, props.previousMessage)
-    ) {
-      // Set the invisible avatar height to 0, but keep the width, padding, etc.
-      extraStyle = { height: 0 }
-    }
 
-    // const avatarProps = getInnerComponentProps()
+    const avatarProps = getInnerComponentProps()
     return (
       <Avatar
         {...avatarProps}
+        renderAvatarOnTop
         imageStyle={{
-          left: [styles.slackAvatar, avatarProps.imageStyle, extraStyle],
+          left: [styles.slackAvatar],
         }}
       />
-    )
+    );
   }
-
-   */
-
-  const marginBottom = userIsSame(props.currentMessage, props.nextMessage) ? 2 : 10;
 
   return (
     <View>
-      <>
-        {renderTime()}
+        <Day {...getInnerComponentProps()} />
+      <View style={{ backgroundColor: props.backgroundColor ?? "white", paddingLeft: 10, paddingTop: 5, paddingBottom: 5 }}>
         <View
           style={[
             styles.container,
-            { marginBottom },
-            // props.containerStyle,
           ]}
         >
         </View>
-        {renderBubble()}
-      </>
+        <ViewRow>
+          {renderAvatar()}
+          <MessageContent {...getInnerComponentProps()} />
+        </ViewRow>
+      </View>
+
     </View>
   );
 }
@@ -125,11 +89,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
-    marginLeft: 8,
+    marginLeft: 10,
     marginRight: 0,
   },
   slackAvatar: {
-    // The bottom should roughly line up with the first line of message text.
     height: 40,
     width: 40,
     borderRadius: 3,

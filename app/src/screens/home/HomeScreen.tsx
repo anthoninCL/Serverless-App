@@ -14,7 +14,6 @@ import {Channel} from "../../types/Channel";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
 
-
 // TODO DELETE FAKE DATAS
 
 const users: User[] = [
@@ -75,7 +74,7 @@ const exampleMessages: Message[] = [
   },
   {
     id: "5",
-    content: "Regarde ce chouette message",
+    content: "Dernier message LOOOOOOOOL",
     createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
     user: users[2]
@@ -137,6 +136,8 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
       previousMessage={props.previousMessage}
       currentMessage={props.currentMessage}
       nextMessage={props.nextMessage }
+      // TODO: regarder si le message est un post ou non pour changer la couleur
+      backgroundColor={props.currentMessage.user._id === users[0].id ? "#E4E4E4" : "white"}
     />
   }
 
@@ -147,10 +148,11 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
         messages={messages}
         onSend={messages => onMessageSend(messages)}
         user={{
-          _id: messages && messages.length % 3 === 0 ? users[0].id : users[1].id,
-          name: messages && messages.length % 3 === 0 ? users[0].name : users[1].name,
+          _id: messages && messages.length % 5 === 0 ? users[0].id : users[1].id,
+          name: messages && messages.length % 5 === 0 ? users[0].name : users[1].name,
           avatar: undefined,
         }}
+        placeholder="Type you message here..."
         renderMessage={renderMessage}
       />
     </MainLayout>
