@@ -1,10 +1,11 @@
-import React from 'react';
-import {Image, View, Text, TouchableOpacity} from 'react-native';
-import {ViewCol, ViewRow} from '../FlexLayout/FlexViews';
+import React, {useState} from 'react';
+import {TouchableOpacity} from 'react-native';
+import {ViewCol} from '../FlexLayout/FlexViews';
 import {Team} from "types/Team";
 import {Avatar} from "../../common/Avatar/Avatar";
 import useTheme from "../../../hooks/useTheme";
 import {ClickableIcon} from "../../common/ClickableIcon/ClickableIcon";
+import {CreateTeamModal} from "../../modals/CreateTeamModal";
 
 type Props = {
   teams?: Team[];
@@ -14,6 +15,11 @@ type Props = {
 
 export const TeamLayout = (props: Props) => {
   const {theme} = useTheme();
+  const [isOverlayVisible, setOverlayVisibility] = useState(false);
+
+  const toggleVisibility = () => {
+    setOverlayVisibility(!isOverlayVisible);
+  };
 
   return (
     <ViewCol justify={"center"} style={{paddingVertical: 20, height: '100%', width: '20%', minWidth: 60, borderTopWidth: 1, borderTopColor: '#393939'}}>
@@ -25,9 +31,9 @@ export const TeamLayout = (props: Props) => {
         );
       })}
       {props.teams?.length < 5 &&
-          <ClickableIcon type={"IonIcons"} name={"add"} onPress={() => {
-          }} colorName={"lightHighPlus"} sizeName={'huge'}/>
+          <ClickableIcon type={"IonIcons"} name={"add"} onPress={() => {setOverlayVisibility(true)}} colorName={"lightHighPlus"} sizeName={'huge'}/>
       }
+      <CreateTeamModal isVisible={isOverlayVisible} onBackDropPress={toggleVisibility} />
     </ViewCol>
   );
 };
