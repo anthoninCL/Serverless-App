@@ -12,7 +12,11 @@
     "legals": "Privacy policy",
     "back": "Back",
     "validate": "Validate",
-    "continue": "Continue"
+    "continue": "Continue",
+    "workspaceName": "Workspace Name",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete"
   },
   "titlePages": {
     "login": "Login"

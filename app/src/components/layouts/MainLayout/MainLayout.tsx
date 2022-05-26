@@ -9,7 +9,7 @@ import {TeamLayout} from "./TeamLayout";
 import {Avatar} from "../../common/Avatar/Avatar";
 import {CurrentTeamLayout} from "./CurrentTeamLayout";
 import {ConvLayout} from "./ConvLayout";
-import {Divider} from "../../common/Divider/Divider";
+import {UserModal} from "../../modals/UserModal";
 
 // TODO Pass the team
 type Props = {
@@ -29,11 +29,6 @@ type Props = {
   deleteAccount: () => void;
 };
 
-// TODO Apply Team's info to the layout
-// TODO Teams list component
-// TODO Channels list component
-// TODO Users list component
-// TODO
 export const MainLayout = (props: Props) => {
   const [isUserModalVisible, setUserModalVisibility] = useState(false);
 
@@ -57,7 +52,7 @@ export const MainLayout = (props: Props) => {
         paddingVertical: 10
       }}>
         <View/>
-        <Text style={{color: '#FFF', fontWeight: "600"}}>Club Manchot | Team | Channel</Text>
+        <Text style={{color: '#FFF', fontWeight: "600"}}>Club Manchot | {props.teams[props.currentTeam]?.name} | {props.isCurrentConvPrivate ? (typeof props.friends[props.currentConv].friendId === 'string' ? props.friends[props.currentConv].friendId : props.friends[props.currentConv].friendId.name) : props.channels[props.currentConv]?.name}</Text>
         <TouchableOpacity onPress={onProfilePicClicked}>
           <Avatar sizeName={"sz35"}/>
         </TouchableOpacity>
@@ -76,51 +71,7 @@ export const MainLayout = (props: Props) => {
           {props.children}
         </ViewRow>
       </ViewRow>
-      {isUserModalVisible &&
-          <ViewCol style={{
-            position: 'absolute',
-            backgroundColor: '#FFF',
-            right: 10, top: 50,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 1,
-            },
-            shadowOpacity: 0.22,
-            shadowRadius: 2.22,
-            borderRadius: 10,
-            elevation: 3,
-            minWidth: 300
-          }}>
-              <ViewRow align={"bottom"} style={{paddingHorizontal: 20, paddingTop: 20, paddingBottom: 20}}>
-                  <Avatar sizeName={'sz50'} style={{shadowColor: "#000",
-                    shadowOffset: {
-                      width: 0,
-                      height: 1,
-                    },
-                    shadowOpacity: 0.22,
-                    shadowRadius: 2.22,
-                    borderRadius: 10,
-                    elevation: 3,}}/>
-                  <ViewCol style={{marginLeft: 10}}>
-                      <Text style={{fontWeight: 'bold', fontSize: 18}}>{props.currentUser.name}</Text>
-                      <Text>{props.currentUser.firstName} {props.currentUser.lastName}</Text>
-                  </ViewCol>
-              </ViewRow>
-              <Divider color={'#B6B6B6'} />
-              <TouchableOpacity style={{paddingVertical: 10, paddingLeft: 20}} onPress={props.navigateToProfile}>
-                <Text>Profile</Text>
-              </TouchableOpacity>
-              <Divider color={'#B6B6B6'} />
-              <TouchableOpacity style={{paddingVertical: 10, paddingLeft: 20}} onPress={props.signOut}>
-                  <Text>Sign out</Text>
-              </TouchableOpacity>
-              <Divider color={'#B6B6B6'} />
-              <TouchableOpacity style={{paddingVertical: 10, paddingLeft: 20}} onPress={props.deleteAccount}>
-                  <Text>Delete your account</Text>
-              </TouchableOpacity>
-          </ViewCol>
-      }
+      <UserModal currentUser={props.currentUser} isModalVisible={isUserModalVisible} navigateToProfile={props.navigateToProfile} deleteAccount={props.deleteAccount} signOut={props.signOut} />
     </ViewCol>
     </TouchableOpacity>
   );

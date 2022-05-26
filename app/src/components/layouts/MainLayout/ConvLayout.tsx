@@ -43,8 +43,8 @@ export const ConvLayout = (props: Props) => {
         </ViewRow>
         {props.channels && props.channels.map((channel, key) => {
           return channelsOpen || (props.currentConv === key && !props.isCurrentConvPrivate) ? (
-            <TouchableOpacity onPress={() => { selectConv(key, false) }} style={{ backgroundColor:  (props.currentConv === key && !props.isCurrentConvPrivate) ? theme.colors.blue : null, paddingVertical: 5, paddingHorizontal: 20}}>
-              <Text key={key} style={{color: (props.currentConv === key && !props.isCurrentConvPrivate) ? theme.colors.light : theme.colors.lightHighPlus, fontSize: theme.fontSizes.large}}>#   {channel.name}</Text>
+            <TouchableOpacity key={key} onPress={() => { selectConv(key, false) }} style={{ backgroundColor:  (props.currentConv === key && !props.isCurrentConvPrivate) ? theme.colors.blue : null, paddingVertical: 5, paddingHorizontal: 20}}>
+              <Text style={{color: (props.currentConv === key && !props.isCurrentConvPrivate) ? theme.colors.light : theme.colors.lightHighPlus, fontSize: theme.fontSizes.large}}>#   {channel.name}</Text>
             </TouchableOpacity>
           ) : null;
         })}
