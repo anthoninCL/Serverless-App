@@ -11,6 +11,7 @@ import {Friend} from "../../../types/Friend";
 import {Channel} from "../../../types/Channel";
 import {Button} from "../../common/Button/Button";
 import {CreateTeamModal} from "../../modals/CreateTeamModal";
+import {ManageChannelModal} from "../../modals/ManageChannelModal";
 
 type Props = {
   currentConv?: number;
@@ -30,8 +31,8 @@ export const ChatHeaderLayout = (props: Props) => {
   return (
     <ViewRow align={"center"} style={{paddingHorizontal: 20, height: 50, borderBottomWidth: 1, borderBottomColor: '#393939'}}>
       <ViewRow justify={"space-between"} >
-        <TouchableOpacity onPress={toggleVisibility}>
-          <ViewRow style={{ flex: 1, flexGrow: 1, alignItems: 'flex-start'}}>
+        <TouchableOpacity onPress={toggleVisibility} activeOpacity={props.isCurrentConvPrivate ? 1 : 0.2}>
+          <ViewRow style={{ flex: 1, flexGrow: 1}} align={'center'}>
             {
               props.isCurrentConvPrivate ? <Avatar sizeName={'larger'}/> : <Text
                 style={{
@@ -76,7 +77,8 @@ export const ChatHeaderLayout = (props: Props) => {
       </ViewRow>
 
       {/* TODO : Changer la modale pour mettre la modale correspondante */}
-      <CreateTeamModal isVisible={isOverlayVisible} onBackDropPress={toggleVisibility} />
+      {!props.isCurrentConvPrivate && <ManageChannelModal isVisible={isOverlayVisible} onBackDropPress={toggleVisibility}  currentChannel={props.channels[props.currentConv]}/> }
+
 
     </ViewRow>
   );
