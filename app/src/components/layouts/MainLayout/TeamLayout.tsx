@@ -26,7 +26,7 @@ export const TeamLayout = (props: Props) => {
       })}
       {props.teams?.length < 5 &&
           <ClickableIcon type={"IonIcons"} name={"add"} onPress={() => {
-          }} colorName={"lightHigh"} sizeName={'huge'}/>
+          }} colorName={"lightHighPlus"} sizeName={'huge'}/>
       }
     </ViewCol>
   );

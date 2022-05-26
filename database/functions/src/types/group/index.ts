@@ -1,7 +1,8 @@
 export type Group = {
   name: string;
+  description: string;
   createdAt: Date;
   updatedAt: Date;
   roles: String[];
-  users: String[];
+  members: String[];
 }

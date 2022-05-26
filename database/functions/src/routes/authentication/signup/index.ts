@@ -1,5 +1,5 @@
 import { Router } from "express";
-import admin, { db, userCollection } from "../../../firebase-service";
+import admin, { db, groupCollection, userCollection } from "../../../firebase-service";
 import { User } from "../../../types";
 
 
@@ -27,10 +27,14 @@ signupRouter.post("/signup", async (req, res) => {
     }).then(async (userRecord) => {
       console.log("Successfully created new user:", userRecord.uid);
       await db.collection(userCollection).doc(userRecord.uid).set(user);
+      await db.collection(groupCollection).doc("users").update({
+        updatedAt: new Date(),
+        members: admin.firestore.FieldValue.arrayUnion(userRecord.uid)
+      });
       console.log("User added to database");
       res.status(201).send(`Created a new user: ${userRecord.uid}`);
     }).catch((error) => {
-      res.status(500).send("Error:" + error);
+      res.status(500).send(error);
     });
   } catch (error) {
     res.status(400).send(`User should contain name, firstName, lastName, email, password and photo!`)

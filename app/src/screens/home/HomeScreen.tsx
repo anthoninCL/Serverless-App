@@ -11,6 +11,7 @@ import {GiftedChat, IMessage, Send} from "react-native-gifted-chat";
 import {Icon} from "../../components/common/Icon/Icon";
 import {Team} from "../../types/Team";
 import {Channel} from "../../types/Channel";
+import {Friend} from "../../types/Friend";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
 
@@ -99,7 +100,57 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     channels: null,
     photo: ''
   };
+  const firstChannel: Channel = {
+    id: '1',
+    name: 'general',
+    createdAt: '',
+    posts: [],
+    messages: [],
+  };
+  const secondChannel: Channel = {
+    id: '2',
+    name: 'ciligo',
+    createdAt: '',
+    posts: [],
+    messages: [],
+  };
+  const firstUser: User = {
+    id: '1',
+    email: 'tompap@juloa.fr',
+    name: 'tompap',
+    firstName: 'Thomas',
+    lastName: 'Papin',
+    photo: '',
+  };
+  const secondUser: User = {
+    id: '2',
+    email: 'loic.cahuzac@juloa.fr',
+    name: 'Loïc',
+    firstName: 'Loïc',
+    lastName: 'Cahuzac',
+    photo: '',
+  };
+  const currentUser: User = {
+    id: '0',
+    email: 'anthonin.clara@juloa.fr',
+    name: 'AnthoninC.',
+    firstName: 'Anthonin',
+    lastName: 'Clara',
+    photo: ''
+  };
+  const firstFriend: Friend = {
+    friendId: firstUser,
+    userId: currentUser,
+    createdAt: '',
+  };
+  const secondFriend: Friend = {
+    friendId: secondUser,
+    userId: currentUser,
+    createdAt: ''
+  };
   const teams = [firstTeam, secondTeam];
+  const channels = [firstChannel, secondChannel];
+  const friends = [firstFriend, secondFriend];
   //const {theme} = useTheme();
   //const styles = fnStyles(theme);
   const conversationMessages = exampleMessages; // TODO : get les messages de la conversation
@@ -141,9 +192,38 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     />
   }
 
+  const navigateToProfile = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'login' }],
+    });
+  };
+
+  // TODO move the two next functions to AuthProvider
+  const signOut = () => {
+
+  };
+
+  const deleteAccount = () => {
+
+  };
+
   return (
-    <MainLayout currentTeam={currentTeam} isCurrentConvPrivate={isCurrentConvPrivate} currentConv={currentConv}
-                onTeamClicked={setCurrentTeam} setCurrentConvPrivacy={setCurrentConvPrivacy} onConvClicked={setCurrentConv} teams={teams}>
+    <MainLayout
+      currentTeam={currentTeam}
+      isCurrentConvPrivate={isCurrentConvPrivate}
+      currentConv={currentConv}
+      onTeamClicked={setCurrentTeam}
+      setCurrentConvPrivacy={setCurrentConvPrivacy}
+      onConvClicked={setCurrentConv}
+      teams={teams}
+      channels={channels}
+      friends={friends}
+      currentUser={currentUser}
+      navigateToProfile={navigateToProfile}
+      signOut={signOut}
+      deleteAccount={deleteAccount}
+    >
       <GiftedChat
         messages={messages}
         onSend={messages => onMessageSend(messages)}
