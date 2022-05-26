@@ -58,14 +58,22 @@ const HomeScreen = ({navigation}: ScreenProps) => {
     lastName: 'Cahuzac',
     photo: '',
   };
+  const currentUser: User = {
+    id: '0',
+    email: 'anthonin.clara@juloa.fr',
+    name: 'AnthoninC.',
+    firstName: 'Anthonin',
+    lastName: 'Clara',
+    photo: ''
+  };
   const firstFriend: Friend = {
     friendId: firstUser,
-    userId: 'Anthonin',
+    userId: currentUser,
     createdAt: '',
   };
   const secondFriend: Friend = {
     friendId: secondUser,
-    userId: 'Anthonin',
+    userId: currentUser,
     createdAt: ''
   };
   const teams = [firstTeam, secondTeam];
@@ -74,9 +82,38 @@ const HomeScreen = ({navigation}: ScreenProps) => {
   //const {theme} = useTheme();
   //const styles = fnStyles(theme);
 
+  const navigateToProfile = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'login' }],
+    });
+  };
+
+  // TODO move the two next functions to AuthProvider
+  const signOut = () => {
+
+  };
+
+  const deleteAccount = () => {
+
+  };
+
   return (
-    <MainLayout currentTeam={currentTeam} isCurrentConvPrivate={isCurrentConvPrivate} currentConv={currentConv}
-                onTeamClicked={setCurrentTeam} setCurrentConvPrivacy={setCurrentConvPrivacy} onConvClicked={setCurrentConv} teams={teams} channels={channels} friends={friends}>
+    <MainLayout
+      currentTeam={currentTeam}
+      isCurrentConvPrivate={isCurrentConvPrivate}
+      currentConv={currentConv}
+      onTeamClicked={setCurrentTeam}
+      setCurrentConvPrivacy={setCurrentConvPrivacy}
+      onConvClicked={setCurrentConv}
+      teams={teams}
+      channels={channels}
+      friends={friends}
+      currentUser={currentUser}
+      navigateToProfile={navigateToProfile}
+      signOut={signOut}
+      deleteAccount={deleteAccount}
+    >
       <Text>TEST</Text>
     </MainLayout>
   );

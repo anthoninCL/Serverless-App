@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const Divider = ({
-  color = 'rgba(255,255,255,0.2)',
+  color = null,
   vertical = false,
   transparent = false,
   section = false,
@@ -21,7 +21,7 @@ export const Divider = ({
   const { theme } = useTheme();
   const styles = fnStyles(theme);
 
-  color = theme.colors.greyLight;
+  color = color ?? theme.colors.greyLight;
 
   return (
     <View
