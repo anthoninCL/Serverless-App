@@ -19,7 +19,9 @@
     "delete": "Delete",
     "channelName": "Channel Name",
     "username": "Username",
-    "add": "Ajouter"
+    "add": "Ajouter",
+    "firstName": "FirstName",
+    "lastName": "LastName"
   },
   "titlePages": {
     "login": "Login"
