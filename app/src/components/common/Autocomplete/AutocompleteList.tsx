@@ -6,20 +6,24 @@ import { StyleProp, ViewStyle, View } from "react-native";
 import fnStyles from "./AutocompleteListStyle";
 import useTheme from "hooks/useTheme";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Icon } from "components/common/Icon/Icon";
+import { ViewRow } from "../../layouts/FlexLayout/FlexViews";
 
 type Props = {
   style?: StyleProp<ViewStyle>;
   data: String[];
+  isMultiSelect?: boolean;
 };
 
 export const AutocompleteList = (props: Props) => {
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedList, setSelectedList] = useState([]);
 
   const { theme } = useTheme();
   const styles = fnStyles(theme);
 
-  const { style, data } = props;
+  const { style, data, isMultiSelect } = props;
 
   useEffect(() => {
     if (search.length > 0) {
@@ -34,6 +38,19 @@ export const AutocompleteList = (props: Props) => {
     }
   }, [search]);
 
+  const manageSelectedUsers = (item: string) => {
+    const idx = selectedList.indexOf(item);
+    if (idx === -1) {
+      const tmpList = [...selectedList];
+      tmpList.push(item);
+      setSelectedList(tmpList);
+    } else {
+      const tmpList = [...selectedList];
+      tmpList.splice(idx, 1);
+      setSelectedList(tmpList);
+    }
+  };
+
   return (
     <View style={style}>
       <Autocomplete
@@ -42,8 +59,20 @@ export const AutocompleteList = (props: Props) => {
         onChangeText={(text) => setSearch(text)}
         flatListProps={{
           renderItem: ({ item }) => (
-            <TouchableOpacity>
-              <Text>{item}</Text>
+            <TouchableOpacity
+              onPress={() => isMultiSelect && manageSelectedUsers(item)}
+            >
+              <ViewRow style={{ width: "20%" }} justify={"space-between"}>
+                <Text>{item}</Text>
+                {isMultiSelect && selectedList.indexOf(item) !== -1 && (
+                  <Icon
+                    name="check"
+                    type="FontAwesome5"
+                    colorName={"#42AA58"}
+                    sizeName={theme.sizings.small}
+                  />
+                )}
+              </ViewRow>
             </TouchableOpacity>
           ),
         }}

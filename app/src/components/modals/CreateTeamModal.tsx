@@ -6,6 +6,8 @@ import { ViewCol, ViewRow } from "../layouts/FlexLayout/FlexViews";
 import { ClickableIcon } from "../common/ClickableIcon/ClickableIcon";
 import { FormInput } from "../common/FormInput/FormInput";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
+import { MultiSelectList } from "../common/MultiSelectList/MultiSelectList";
+import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
 
 type Props = {
   isVisible: boolean;
@@ -63,7 +65,10 @@ export const CreateTeamModal = (props: Props) => {
           placeholderKey={"common.workspaceName"}
           style={{ marginBottom: 20 }}
         />
-        <Text>LUCAS FDP METS TON MULTISELECT USER ICI</Text>
+        <AutocompleteList
+          data={["Thomas", "Mathieux", "Antho la merde", "Lucas le roi "]}
+          isMultiSelect
+        />
         <ViewRow align={"center"} style={{ marginTop: 20 }}>
           <Text
             style={{

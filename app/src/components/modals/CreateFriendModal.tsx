@@ -52,12 +52,7 @@ export const CreateFriendModal = (props: Props) => {
           worry, you can remove them if they're annoying.
         </Text>
         <AutocompleteList
-          data={[
-            "Thomas",
-            "Mathieux",
-            "Antho la merde",
-            "Lucas le roi de ce monde sérieux il est trop fort",
-          ]}
+          data={["Thomas", "Mathieux", "Antho la merde", "Lucas le roi "]}
         />
         <ViewRow align={"center"} style={{ marginTop: 20 }}>
           <Text
