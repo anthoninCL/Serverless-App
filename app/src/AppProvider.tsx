@@ -6,6 +6,7 @@ import { AuthProvider } from "providers/AuthProvider";
 import { UserProvider } from "./providers/UserProvider";
 import { AlertProvider } from "./providers/AlertProvider";
 import { TeamProvider } from "./providers/TeamProvider";
+import { FriendProvider } from "./providers/FriendProvider";
 
 type Props = {
   children: JSX.Element;
@@ -18,7 +19,9 @@ const AppProvider = ({ children }: Props) => (
         <AlertProvider>
           <AuthProvider>
             <UserProvider>
-              <TeamProvider>{children}</TeamProvider>
+              <FriendProvider>
+                <TeamProvider>{children}</TeamProvider>
+              </FriendProvider>
             </UserProvider>
           </AuthProvider>
         </AlertProvider>

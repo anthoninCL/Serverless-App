@@ -9,6 +9,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Icon } from "components/common/Icon/Icon";
 import { ViewRow } from "../../layouts/FlexLayout/FlexViews";
 import { User } from "../../../types/User";
+import useFriend from "../../../hooks/useFriend";
 
 type Props = {
   style?: StyleProp<ViewStyle>;
@@ -22,6 +23,7 @@ export const AutocompleteList = (props: Props) => {
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedList, setSelectedList] = useState([]);
+  const { addFriend } = useFriend();
 
   const { theme } = useTheme();
   const styles = fnStyles(theme);
@@ -84,7 +86,9 @@ export const AutocompleteList = (props: Props) => {
         flatListProps={{
           renderItem: ({ item }) => (
             <TouchableOpacity
-              onPress={() => isMultiSelect && manageSelectedUsers(item)}
+              onPress={() =>
+                isMultiSelect ? manageSelectedUsers(item) : addFriend(item.id)
+              }
             >
               <ViewRow style={{ width: "20%" }} justify={"space-between"}>
                 <Text>{item.name}</Text>

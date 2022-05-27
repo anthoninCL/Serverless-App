@@ -16,6 +16,7 @@ import useAuth from "../../hooks/useAuth";
 import { ChatHeaderLayout } from "../../components/layouts/ChatHeaderLayout/ChatHeaderLayout";
 import useTeam from "../../hooks/useTeam";
 import useUser from "../../hooks/useUser";
+import useFriend from "../../hooks/useFriend";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, "home">;
 
@@ -92,11 +93,14 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   const [currentConv, setCurrentConv] = useState(0);
   const { signout } = useAuth();
   const { fetchTeams, teams, isFetching: isTeamFetching } = useTeam();
+  const { fetchFriends, friends } = useFriend();
 
   useEffect(() => {
     fetchTeams();
+    fetchFriends();
   }, []);
 
+  console.log(friends);
   //console.log(team);
 
   // TODO FAIRE LE MÉNAGE !!!
@@ -164,7 +168,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   };
   // const teams = [firstTeam, secondTeam];
   const channels = [firstChannel, secondChannel];
-  const friends = [firstFriend, secondFriend];
+  //const friends = [firstFriend, secondFriend];
   //const {theme} = useTheme();
   //const styles = fnStyles(theme);
   const conversationMessages = exampleMessages; // TODO : get les messages de la conversation
