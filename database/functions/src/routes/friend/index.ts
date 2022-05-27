@@ -20,7 +20,7 @@ friendRouter.get("/friend", async (req, res) => {
 
     friendQuerySnapshot.forEach(
         (doc) => {
-          if (doc.data().members.includes(res.locals.uid)) {
+          if (doc.data().users.includes(res.locals.uid)) {
             friends.push({
               id: doc.id,
               data: doc.data(),
