@@ -22,15 +22,15 @@ export const CreateTeamModal = (props: Props) => {
   const { createTeam } = useTeam();
   const [name, setName] = useState("");
   const [buttonEnabled, setButtonEnabled] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
 
-  console.log(props.users);
   useEffect(() => {
     setButtonEnabled(name.length > 0);
   }, [name]);
 
   // TODO : CLOSE MODALE SI LA TEAM EST CRÉÉE
   const handleCreateTeam = () => {
-    createTeam(name, []);
+    createTeam(name, selectedIds);
   };
 
   return (
@@ -75,7 +75,12 @@ export const CreateTeamModal = (props: Props) => {
           placeholderKey={"common.workspaceName"}
           style={{ marginBottom: 20 }}
         />
-        <AutocompleteList data={props.users} isMultiSelect />
+        <AutocompleteList
+          data={props.users}
+          isMultiSelect
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+        />
         <ViewRow align={"center"} style={{ marginTop: 20 }}>
           <Text
             style={{

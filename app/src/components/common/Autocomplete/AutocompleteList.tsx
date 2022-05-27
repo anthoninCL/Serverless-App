@@ -14,6 +14,8 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   data: User[];
   isMultiSelect?: boolean;
+  selectedIds?: string[];
+  setSelectedIds?: (selectedIds: string[]) => void;
 };
 
 export const AutocompleteList = (props: Props) => {
@@ -25,6 +27,18 @@ export const AutocompleteList = (props: Props) => {
   const styles = fnStyles(theme);
 
   const { style, data, isMultiSelect } = props;
+
+  useEffect(() => {
+    if (props.selectedIds) {
+      console.log(props.selectedIds);
+      const tmpList = [];
+      props.selectedIds.forEach((selectedId: string) => {
+        const idx = data.map((object) => object.id).indexOf(selectedId);
+        tmpList.push(data[idx]);
+      });
+      setSelectedList(tmpList);
+    }
+  }, []);
 
   useEffect(() => {
     if (search.length > 0) {
@@ -39,7 +53,7 @@ export const AutocompleteList = (props: Props) => {
     }
   }, [search]);
 
-  const manageSelectedUsers = (item: string) => {
+  const manageSelectedUsers = (item: User) => {
     const idx = selectedList.indexOf(item);
     if (idx === -1) {
       const tmpList = [...selectedList];
@@ -50,10 +64,16 @@ export const AutocompleteList = (props: Props) => {
       tmpListFiltered.splice(idx, 1);
       tmpListFiltered.unshift(item);
       setFilteredData(tmpListFiltered);
+      props.selectedIds.push(item.id);
+      props.setSelectedIds(props.selectedIds);
+      console.log(props.selectedIds);
     } else {
       const tmpList = [...selectedList];
       tmpList.splice(idx, 1);
+      const idxSelectedIds = props.selectedIds.indexOf(item.id);
+      props.selectedIds.splice(idxSelectedIds, 1);
       setSelectedList(tmpList);
+      props.setSelectedIds(props.selectedIds);
     }
   };
 

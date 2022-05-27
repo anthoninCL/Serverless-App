@@ -8,18 +8,22 @@ import { FormInput } from "../common/FormInput/FormInput";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 import { Team } from "../../types/Team";
 import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
+import { User } from "../../types/User";
 
 type Props = {
   isVisible: boolean;
   onBackDropPress: () => void;
   currentTeam: Team;
+  users: User[];
 };
 
 export const ManageTeamModal = (props: Props) => {
   const { theme } = useTheme();
   const [name, setName] = useState(props.currentTeam.name);
   const [buttonEnabled, setButtonEnabled] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(props.currentTeam.members);
 
+  console.log(props.currentTeam);
   useEffect(() => {
     setButtonEnabled(name.length > 0 && name != props.currentTeam.name);
   }, [name]);
@@ -67,8 +71,10 @@ export const ManageTeamModal = (props: Props) => {
           style={{ marginBottom: 20 }}
         />
         <AutocompleteList
-          data={["Thomas", "Mathieux", "Antho la merde", "Lucas le roi "]}
+          data={props.users}
           isMultiSelect
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
         />
         <ViewRow
           justify={"space-between"}
