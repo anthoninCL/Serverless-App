@@ -15,7 +15,7 @@ import { ViewCol } from "../../components/layouts/FlexLayout/FlexViews";
 import useAuth from "../../hooks/useAuth";
 import {ChatHeaderLayout} from "../../components/layouts/ChatHeaderLayout/ChatHeaderLayout";
 
-export type ScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
+export type ScreenProps = NativeStackScreenProps<RootStackParamList, "home">;
 
 // TODO DELETE FAKE DATAS
 
@@ -90,66 +90,66 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   const [currentConv, setCurrentConv] = useState(0);
   const { signout } = useAuth();
   const firstTeam: Team = {
-    id: '1',
-    name: 'Watchelp',
+    id: "1",
+    name: "Watchelp",
     members: null,
     channels: null,
-    photo: ''
+    photo: "",
   };
   const secondTeam: Team = {
-    id: '2',
-    name: 'Juloa',
+    id: "2",
+    name: "Juloa",
     members: null,
     channels: null,
-    photo: ''
+    photo: "",
   };
   const firstChannel: Channel = {
-    id: '1',
-    name: 'general',
-    createdAt: '',
+    id: "1",
+    name: "general",
+    createdAt: "",
     posts: [],
     messages: [],
   };
   const secondChannel: Channel = {
-    id: '2',
-    name: 'ciligo',
-    createdAt: '',
+    id: "2",
+    name: "ciligo",
+    createdAt: "",
     posts: [],
     messages: [],
   };
   const firstUser: User = {
-    id: '1',
-    email: 'tompap@juloa.fr',
-    name: 'tompap',
-    firstName: 'Thomas',
-    lastName: 'Papin',
-    photo: '',
+    id: "1",
+    email: "tompap@juloa.fr",
+    name: "tompap",
+    firstName: "Thomas",
+    lastName: "Papin",
+    photo: "",
   };
   const secondUser: User = {
-    id: '2',
-    email: 'loic.cahuzac@juloa.fr',
-    name: 'Loïc',
-    firstName: 'Loïc',
-    lastName: 'Cahuzac',
-    photo: '',
+    id: "2",
+    email: "loic.cahuzac@juloa.fr",
+    name: "Loïc",
+    firstName: "Loïc",
+    lastName: "Cahuzac",
+    photo: "",
   };
   const currentUser: User = {
-    id: '0',
-    email: 'anthonin.clara@juloa.fr',
-    name: 'AnthoninC.',
-    firstName: 'Anthonin',
-    lastName: 'Clara',
-    photo: ''
+    id: "0",
+    email: "anthonin.clara@juloa.fr",
+    name: "AnthoninC.",
+    firstName: "Anthonin",
+    lastName: "Clara",
+    photo: "",
   };
   const firstFriend: Friend = {
     friendId: firstUser,
     userId: currentUser,
-    createdAt: '',
+    createdAt: "",
   };
   const secondFriend: Friend = {
     friendId: secondUser,
     userId: currentUser,
-    createdAt: ''
+    createdAt: "",
   };
   const teams = [firstTeam, secondTeam];
   const channels = [firstChannel, secondChannel];

@@ -1,14 +1,20 @@
-import React, { createContext, useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { User } from '../types/User';
-import {removeStoredData} from "../utils/fnAsyncStorage";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { createContext, useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { auth } from "../firebase";
+import { User } from "../types/User";
+import { removeStoredData, storeData } from "../utils/fnAsyncStorage";
 
 type Auth = {
   user?: User;
   token?: string;
   signin: (identifier: string, password: string) => Promise<boolean | User>;
   refreshUser: () => void; // should return Promise<User>
-  register: (username: string, email: string, password: string) => Promise<boolean | User>;
+  register: (
+    username: string,
+    email: string,
+    password: string
+  ) => Promise<boolean | User>;
   updateUser: (payload: any) => Promise<void>;
   isFetching: boolean;
   isSignInError: boolean;
@@ -25,25 +31,21 @@ type Props = {
 };
 
 export const AuthProvider = ({ children }: Props) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [user, setUser] = useState<User>();
   const [currentJwt, setCurrentJwt] = useState<string | undefined>(undefined);
   const [isFetching, setIsFetching] = useState(false);
   const [isSignInError, setIsSignInError] = useState(false);
   const [isRegisterError, setIsRegisterError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined,
+    undefined
   );
 
-  const signout = useCallback(
-    async () => {
-      await removeStoredData('token');
-    },
-    [],
-  );
+  const signout = useCallback(async () => {
+    await removeStoredData("token");
+  }, []);
 
-  const refreshUser = useCallback(async () => {
-  }, [signout]);
+  const refreshUser = useCallback(async () => {}, [signout]);
 
   const signin = useCallback(
     async (email: string, password: string): Promise<boolean | User> => {
@@ -52,23 +54,68 @@ export const AuthProvider = ({ children }: Props) => {
         password,
       };
 
+      try {
+        const res = await signInWithEmailAndPassword(auth, email, password);
+        setCurrentJwt(res.user["accessToken"]);
+        await storeData("token", res.user["accessToken"]);
+        fetch(
+          `https://europe-west1-messengerserverless.cloudfunctions.net/webApi/api/v1/user/${res.user["uid"]}`,
+          {
+            headers: {
+              Authorization: `Bearer ${res.user["accessToken"]}`,
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((res: User) => {
+            setUser(res);
+          });
+      } catch (error) {
+        console.log(error.message);
+        return false;
+      }
+
       return true;
     },
-    [refreshUser],
+    [refreshUser]
   );
 
   const register = useCallback(
-    async (username: string, email: string, password: string): Promise<boolean> => {
+    async (
+      username: string,
+      email: string,
+      password: string
+    ): Promise<boolean> => {
       const payload = {
         username,
         email,
         password,
       };
 
-      setIsRegisterError(true);
+      await fetch(
+        `https://europe-west1-messengerserverless.cloudfunctions.net/webApi/api/v1/authentication/signup`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            name: username,
+            password: password,
+            firstName: "test",
+            lastName: "test",
+            email: email,
+            photo: "test",
+          }),
+        }
+      ).catch((error) => {
+        console.log(error);
+        setIsRegisterError(true);
+        setErrorMessage(error.message);
+      });
       return true;
     },
-    [t],
+    [t]
   );
 
   const cleanError = useCallback(() => {
@@ -78,10 +125,10 @@ export const AuthProvider = ({ children }: Props) => {
   }, []);
 
   const updateUser = useCallback(
-    async payload => {
+    async (payload) => {
       setIsFetching(true);
     },
-    [user, refreshUser],
+    [user, refreshUser]
   );
 
   const value: Auth = useMemo(
@@ -97,7 +144,7 @@ export const AuthProvider = ({ children }: Props) => {
       isRegisterError,
       errorMessage,
       cleanError,
-      signout
+      signout,
     }),
     [
       user,
@@ -111,8 +158,8 @@ export const AuthProvider = ({ children }: Props) => {
       isRegisterError,
       errorMessage,
       cleanError,
-      signout
-    ],
+      signout,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
