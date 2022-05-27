@@ -11,7 +11,13 @@ type ChannelProps = {
   fetchChannel: (teamId: string, id: string) => {};
   fetchChannels: (teamId: string) => {};
   createChannel: (teamId: string, name: string) => {};
-  updateChannel: (teamId: string, id: string, name?: string,       messages?: Array<string>, posts?: Array<string>,) => {};
+  updateChannel: (
+    teamId: string,
+    id: string,
+    name?: string,
+    messages?: Array<string>,
+    posts?: Array<string>
+  ) => {};
   deleteChannel: (teamId: string, id: string) => {};
   refreshChannels: (teamId: string) => {};
 };
@@ -85,24 +91,21 @@ export const ChannelProvider = ({ children }: Props) => {
     return null;
   }, []);
 
-  const createChannel = useCallback(
-    async (teamId: string, name: string) => {
-      const payload = {
-        name,
-      };
-      try {
-        await fetchJSON({
-          url: `${teamId}/channel`,
-          method: "POST",
-          payload,
-        });
-        await refreshChannels(teamId);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    []
-  );
+  const createChannel = useCallback(async (teamId: string, name: string) => {
+    const payload = {
+      name,
+    };
+    try {
+      await fetchJSON({
+        url: `${teamId}/channel`,
+        method: "POST",
+        payload,
+      });
+      await refreshChannels(teamId);
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
 
   const updateChannel = useCallback(
     async (
@@ -110,7 +113,7 @@ export const ChannelProvider = ({ children }: Props) => {
       id: string,
       name?: string,
       messages?: Array<string>,
-      posts?: Array<string>,
+      posts?: Array<string>
     ) => {
       const payload = {
         name,
@@ -172,5 +175,7 @@ export const ChannelProvider = ({ children }: Props) => {
     ]
   );
 
-  return <ChannelContext.Provider value={value}>{children}</ChannelContext.Provider>;
+  /*return (
+    <ChannelContext.Provider value={value}>{children} </ChannelContext.Provider>
+  );*/
 };

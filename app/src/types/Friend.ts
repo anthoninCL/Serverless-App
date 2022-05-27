@@ -1,7 +1,8 @@
-import {User} from "./User";
+import { User } from "./User";
 
-export type Friend = {
-  friendId: User | string;
-  userId: User | string;
-  createdAt: string;
+export type friend = {
+  users: [string, string];
+  createdAt: Date;
+  updatedAt: Date;
+  messages: [string];
 };

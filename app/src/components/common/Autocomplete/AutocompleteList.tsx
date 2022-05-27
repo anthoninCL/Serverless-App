@@ -9,7 +9,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Icon } from "components/common/Icon/Icon";
 import { ViewRow } from "../../layouts/FlexLayout/FlexViews";
 import { User } from "../../../types/User";
-import useFriend from "../../../hooks/useFriend";
 
 type Props = {
   style?: StyleProp<ViewStyle>;
@@ -23,7 +22,6 @@ export const AutocompleteList = (props: Props) => {
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedList, setSelectedList] = useState([]);
-  const { addFriend } = useFriend();
 
   const { theme } = useTheme();
   const styles = fnStyles(theme);
@@ -55,25 +53,36 @@ export const AutocompleteList = (props: Props) => {
   }, [search]);
 
   const manageSelectedUsers = (item: User) => {
-    const idx = selectedList.indexOf(item);
-    if (idx === -1) {
-      const tmpList = [...selectedList];
-      tmpList.push(item);
-      setSelectedList(tmpList);
-      const tmpListFiltered = [...filteredData];
-      const idx = tmpListFiltered.indexOf(item);
-      tmpListFiltered.splice(idx, 1);
-      tmpListFiltered.unshift(item);
-      setFilteredData(tmpListFiltered);
-      props.selectedIds.push(item.id);
-      props.setSelectedIds(props.selectedIds);
+    if (props.isMultiSelect) {
+      const idx = selectedList.indexOf(item);
+      if (idx === -1) {
+        const tmpList = [...selectedList];
+        tmpList.push(item);
+        setSelectedList(tmpList);
+        const tmpListFiltered = [...filteredData];
+        const idx = tmpListFiltered.indexOf(item);
+        tmpListFiltered.splice(idx, 1);
+        tmpListFiltered.unshift(item);
+        setFilteredData(tmpListFiltered);
+        props.selectedIds.push(item.id);
+        props.setSelectedIds(props.selectedIds);
+      } else {
+        const tmpList = [...selectedList];
+        tmpList.splice(idx, 1);
+        const idxSelectedIds = props.selectedIds.indexOf(item.id);
+        props.selectedIds.splice(idxSelectedIds, 1);
+        setSelectedList(tmpList);
+        props.setSelectedIds(props.selectedIds);
+      }
     } else {
-      const tmpList = [...selectedList];
-      tmpList.splice(idx, 1);
-      const idxSelectedIds = props.selectedIds.indexOf(item.id);
-      props.selectedIds.splice(idxSelectedIds, 1);
-      setSelectedList(tmpList);
-      props.setSelectedIds(props.selectedIds);
+      const idx = selectedList.indexOf(item);
+      if (idx !== -1) {
+        setSelectedList([]);
+        props.setSelectedIds([]);
+      } else {
+        setSelectedList([item]);
+        props.setSelectedIds([item.id]);
+      }
     }
   };
 
@@ -85,14 +94,10 @@ export const AutocompleteList = (props: Props) => {
         onChangeText={(text) => setSearch(text)}
         flatListProps={{
           renderItem: ({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                isMultiSelect ? manageSelectedUsers(item) : addFriend(item.id)
-              }
-            >
+            <TouchableOpacity onPress={() => manageSelectedUsers(item)}>
               <ViewRow style={{ width: "20%" }} justify={"space-between"}>
                 <Text>{item.name}</Text>
-                {isMultiSelect && selectedList.indexOf(item) !== -1 && (
+                {selectedList.indexOf(item) !== -1 && (
                   <Icon
                     name="check"
                     type="FontAwesome5"

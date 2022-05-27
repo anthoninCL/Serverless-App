@@ -11,6 +11,7 @@ import { CreateFriendModal } from "../../modals/CreateFriendModal";
 import { User } from "../../../types/User";
 import useUser from "../../../hooks/useUser";
 import { useEffect } from "react";
+import { getStoredData } from "../../../utils/fnAsyncStorage";
 
 type Props = {
   channels?: Channel[];
@@ -27,9 +28,16 @@ export const ConvLayout = (props: Props) => {
   const [friendsOpen, setFriendsOpen] = useState(true);
   const [isChannelModalVisible, setChannelModalVisibility] = useState(false);
   const [isFriendModalVisible, setFriendModalVisibility] = useState(false);
-  const { fetchUsers, users } = useUser();
+  const { fetchUsers, users, fetchUser } = useUser();
+  const [uid, setUid] = useState("");
+
+  const retrieveUid = async () => {
+    const value = await getStoredData("uid");
+    setUid(value);
+  };
 
   useEffect(() => {
+    retrieveUid();
     fetchUsers();
   }, []);
 
@@ -52,6 +60,18 @@ export const ConvLayout = (props: Props) => {
 
   const onFriendsArrowClicked = () => {
     setFriendsOpen(!friendsOpen);
+  };
+
+  const getFriendName = (friends: string[]) => {
+    const idx = friends.indexOf(uid);
+    if (idx != -1) {
+      friends.splice(idx, 1);
+    }
+    const indexUser = users.map((user: User) => user.id).indexOf(friends[0]);
+    if (indexUser != -1) {
+      return users[indexUser].name;
+    }
+    return "";
   };
 
   return (
@@ -204,9 +224,7 @@ export const ConvLayout = (props: Props) => {
                       fontSize: theme.fontSizes.large,
                     }}
                   >
-                    {typeof friend.friendId === "string"
-                      ? friend.friendId
-                      : friend.friendId.name}
+                    {getFriendName(friend.users)}
                   </Text>
                 </ViewRow>
               </TouchableOpacity>

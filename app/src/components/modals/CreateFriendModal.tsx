@@ -7,6 +7,7 @@ import { ClickableIcon } from "../common/ClickableIcon/ClickableIcon";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
 import { User } from "../../types/User";
+import { useFriend } from "../../hooks/useFriend";
 
 type Props = {
   isVisible: boolean;
@@ -17,7 +18,14 @@ type Props = {
 export const CreateFriendModal = (props: Props) => {
   const { theme } = useTheme();
   const [buttonEnabled, setButtonEnabled] = useState(false);
+  const [selectedId, setSelectedId] = useState([]);
+  const { addFriend } = useFriend();
 
+  useEffect(() => {
+    setButtonEnabled(selectedId.length > 0);
+  }, [selectedId]);
+
+  //TODO: Remove friends alreayd added and ourself in the data on the autocomplete
   return (
     <Overlay
       isVisible={props.isVisible}
@@ -53,7 +61,11 @@ export const CreateFriendModal = (props: Props) => {
           You can add friends to talk with them in private messages. Don't
           worry, you can remove them if they're annoying.
         </Text>
-        <AutocompleteList data={props.users} />
+        <AutocompleteList
+          data={props.users}
+          selectedIds={selectedId}
+          setSelectedIds={setSelectedId}
+        />
         <ViewRow align={"center"} style={{ marginTop: 20 }}>
           <Text
             style={{
@@ -66,7 +78,9 @@ export const CreateFriendModal = (props: Props) => {
             adding wrong people to your friends.
           </Text>
           <ClassicButton
-            onPress={() => {}}
+            onPress={() => {
+              addFriend(selectedId[0]);
+            }}
             labelKey={"common.create"}
             type={"classic"}
             enabled={buttonEnabled}

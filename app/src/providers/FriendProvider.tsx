@@ -8,6 +8,7 @@ type FriendProps = {
   isFetching: boolean;
   fetchFriends: () => {};
   addFriend: (id: string) => {};
+  deleteFriend: (id: string) => {};
 };
 
 export const FriendContext = createContext<FriendProps>({} as FriendProps);
@@ -54,14 +55,26 @@ export const FriendProvider = ({ children }: Props) => {
     }
   }, []);
 
+  const deleteFriend = useCallback(async (id: string) => {
+    try {
+      await fetchJSON({
+        url: `team/${id}`,
+        method: "DELETE",
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
   const value: FriendProps = useMemo(
     () => ({
       friends,
       isFetching,
       fetchFriends,
       addFriend,
+      deleteFriend,
     }),
-    [friends, isFetching, fetchFriends, addFriend]
+    [friends, isFetching, fetchFriends, addFriend, deleteFriend]
   );
 
   return (

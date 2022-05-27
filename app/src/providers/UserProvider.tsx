@@ -7,6 +7,7 @@ type UserProps = {
   users: User[];
   isFetching: boolean;
   fetchUsers: () => {};
+  fetchUser: (id: string) => User;
 };
 
 export const UserContext = createContext<UserProps>({} as UserProps);
@@ -37,13 +38,31 @@ export const UserProvider = ({ children }: Props) => {
     return null;
   }, []);
 
+  const fetchUser = useCallback(async (id: string) => {
+    try {
+      setIsFetching(true);
+      const res = await fetchJSON({
+        url: `user/${id}`,
+        method: "GET",
+      });
+
+      const formatedRes = formatData(res);
+      setIsFetching(false);
+      return formatedRes;
+    } catch (e) {
+      console.log(e.message);
+    }
+    return null;
+  }, []);
+
   const value: UserProps = useMemo(
     () => ({
       users,
       isFetching,
       fetchUsers,
+      fetchUser,
     }),
-    [users, isFetching, fetchUsers]
+    [users, isFetching, fetchUsers, fetchUser]
   );
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

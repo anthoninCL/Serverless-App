@@ -58,6 +58,7 @@ export const AuthProvider = ({ children }: Props) => {
         const res = await signInWithEmailAndPassword(auth, email, password);
         setCurrentJwt(res.user["accessToken"]);
         await storeData("token", res.user["accessToken"]);
+        await storeData("uid", res.user["uid"]);
         fetch(
           `https://europe-west1-messengerserverless.cloudfunctions.net/webApi/api/v1/user/${res.user["uid"]}`,
           {
