@@ -8,10 +8,11 @@ import useTheme from "hooks/useTheme";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Icon } from "components/common/Icon/Icon";
 import { ViewRow } from "../../layouts/FlexLayout/FlexViews";
+import { User } from "../../../types/User";
 
 type Props = {
   style?: StyleProp<ViewStyle>;
-  data: String[];
+  data: User[];
   isMultiSelect?: boolean;
 };
 
@@ -29,8 +30,8 @@ export const AutocompleteList = (props: Props) => {
     if (search.length > 0) {
       setFilteredData(() =>
         data.filter(
-          (dataItem) =>
-            dataItem.toLowerCase().indexOf(search.toLowerCase()) > -1
+          (dataItem: User) =>
+            dataItem.name.toLowerCase().indexOf(search.toLowerCase()) > -1
         )
       );
     } else {
@@ -68,7 +69,7 @@ export const AutocompleteList = (props: Props) => {
               onPress={() => isMultiSelect && manageSelectedUsers(item)}
             >
               <ViewRow style={{ width: "20%" }} justify={"space-between"}>
-                <Text>{item}</Text>
+                <Text>{item.name}</Text>
                 {isMultiSelect && selectedList.indexOf(item) !== -1 && (
                   <Icon
                     name="check"

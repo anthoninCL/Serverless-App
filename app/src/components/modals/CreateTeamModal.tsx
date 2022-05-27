@@ -8,10 +8,12 @@ import { FormInput } from "../common/FormInput/FormInput";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 import { MultiSelectList } from "../common/MultiSelectList/MultiSelectList";
 import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
+import { User } from "../../types/User";
 
 type Props = {
   isVisible: boolean;
   onBackDropPress: () => void;
+  users: User[];
 };
 
 export const CreateTeamModal = (props: Props) => {
@@ -19,6 +21,7 @@ export const CreateTeamModal = (props: Props) => {
   const [name, setName] = useState("");
   const [buttonEnabled, setButtonEnabled] = useState(false);
 
+  console.log(props.users);
   useEffect(() => {
     setButtonEnabled(name.length > 0);
   }, [name]);
@@ -65,10 +68,7 @@ export const CreateTeamModal = (props: Props) => {
           placeholderKey={"common.workspaceName"}
           style={{ marginBottom: 20 }}
         />
-        <AutocompleteList
-          data={["Thomas", "Mathieux", "Antho la merde", "Lucas le roi "]}
-          isMultiSelect
-        />
+        <AutocompleteList data={props.users} isMultiSelect />
         <ViewRow align={"center"} style={{ marginTop: 20 }}>
           <Text
             style={{
