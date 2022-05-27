@@ -29,7 +29,7 @@ teamRouter.get("/team", async (req, res) => {
 
     teamQuerySnapshot.forEach(
         (doc) => {
-          if (doc.data().members.includes(res.locals.uid) || res.locals.role == "admin") {
+          if (doc.data().members.includes(res.locals.uid) || res.locals.roles.includes("admin")) {
             teams.push({
               id: doc.id,
               data: doc.data(),
