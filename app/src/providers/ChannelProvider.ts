@@ -10,8 +10,8 @@ type ChannelProps = {
   isFetching: boolean;
   fetchChannel: (teamId: string, id: string) => {};
   fetchChannels: (teamId: string) => {};
-  createChannel: (teamId: string, name: string, members: Array<string>) => {};
-  updateChannel: (teamId: string, id: string, name?: string, members?: Array<string>, channels?: Array<string>, photo?: string) => {};
+  createChannel: (teamId: string, name: string) => {};
+  updateChannel: (teamId: string, id: string, name?: string,       messages?: Array<string>, posts?: Array<string>,) => {};
   deleteChannel: (teamId: string, id: string) => {};
   refreshChannels: (teamId: string) => {};
 };
@@ -86,10 +86,9 @@ export const ChannelProvider = ({ children }: Props) => {
   }, []);
 
   const createChannel = useCallback(
-    async (teamId: string, name: string, members: Array<string>) => {
+    async (teamId: string, name: string) => {
       const payload = {
         name,
-        members,
       };
       try {
         await fetchJSON({
@@ -110,15 +109,13 @@ export const ChannelProvider = ({ children }: Props) => {
       teamId: string,
       id: string,
       name?: string,
-      members?: Array<string>,
-      channels?: Array<string>,
-      photo?: string
+      messages?: Array<string>,
+      posts?: Array<string>,
     ) => {
       const payload = {
         name,
-        members,
-        channels,
-        photo,
+        messages,
+        posts,
       };
       try {
         await fetchJSON({
