@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import { Text } from "react-native";
 import { Overlay } from "react-native-elements";
 import useTheme from "../../hooks/useTheme";
@@ -8,6 +8,7 @@ import { FormInput } from "../common/FormInput/FormInput";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 import { MultiSelectList } from "../common/MultiSelectList/MultiSelectList";
 import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
+import useTeam from "../../hooks/useTeam";
 
 type Props = {
   isVisible: boolean;
@@ -16,12 +17,18 @@ type Props = {
 
 export const CreateTeamModal = (props: Props) => {
   const { theme } = useTheme();
+  const { createTeam } = useTeam();
   const [name, setName] = useState("");
   const [buttonEnabled, setButtonEnabled] = useState(false);
 
   useEffect(() => {
     setButtonEnabled(name.length > 0);
   }, [name]);
+
+  // TODO : CLOSE MODALE SI LA TEAM EST CRÉÉE
+  const handleCreateTeam = () => {
+    createTeam(name, []);
+  }
 
   return (
     <Overlay
@@ -81,7 +88,7 @@ export const CreateTeamModal = (props: Props) => {
             mistake by adding wrong people to your team.
           </Text>
           <ClassicButton
-            onPress={() => {}}
+            onPress={handleCreateTeam}
             labelKey={"common.create"}
             type={"classic"}
             enabled={buttonEnabled}

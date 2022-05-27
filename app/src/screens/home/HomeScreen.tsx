@@ -90,13 +90,13 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   const [isCurrentConvPrivate, setCurrentConvPrivacy] = useState(false);
   const [currentConv, setCurrentConv] = useState(0);
   const { signout } = useAuth();
-  const { fetchTeams, team } = useTeam();
+  const { fetchTeams, teams, isFetching: isTeamFetching } = useTeam();
 
   useEffect(() => {
     fetchTeams();
   }, []);
 
-  console.log(team);
+  console.log(teams);
 
   // TODO FAIRE LE MÉNAGE !!!
   const firstTeam: Team = {
@@ -161,7 +161,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     userId: currentUser,
     createdAt: "",
   };
-  const teams = [firstTeam, secondTeam];
+  // const teams = [firstTeam, secondTeam];
   const channels = [firstChannel, secondChannel];
   const friends = [firstFriend, secondFriend];
   //const {theme} = useTheme();
@@ -243,32 +243,36 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   }, []);*/
 
   return (
-    <MainLayout
-      currentTeam={currentTeam}
-      isCurrentConvPrivate={isCurrentConvPrivate}
-      currentConv={currentConv}
-      onTeamClicked={setCurrentTeam}
-      setCurrentConvPrivacy={setCurrentConvPrivacy}
-      onConvClicked={setCurrentConv}
-      teams={teams}
-      channels={channels}
-      friends={friends}
-      currentUser={currentUser}
-      signOut={signOut}
-      deleteAccount={deleteAccount}
-    >
-      <GiftedChat
-        messages={messages}
-        onSend={messages => onMessageSend(messages)}
-        user={{
-          _id: messages && messages.length % 5 === 0 ? users[0].id : users[1].id,
-          name: messages && messages.length % 5 === 0 ? users[0].name : users[1].name,
-          avatar: undefined,
-        }}
-        placeholder="Type you message here..."
-        renderMessage={renderMessage}
-      />
-    </MainLayout>
+    <>
+      {!isTeamFetching ? (
+        <MainLayout
+          currentTeam={currentTeam}
+          isCurrentConvPrivate={isCurrentConvPrivate}
+          currentConv={currentConv}
+          onTeamClicked={setCurrentTeam}
+          setCurrentConvPrivacy={setCurrentConvPrivacy}
+          onConvClicked={setCurrentConv}
+          teams={teams}
+          channels={channels}
+          friends={friends}
+          currentUser={currentUser}
+          signOut={signOut}
+          deleteAccount={deleteAccount}
+        >
+          <GiftedChat
+            messages={messages}
+            onSend={messages => onMessageSend(messages)}
+            user={{
+              _id: messages && messages.length % 5 === 0 ? users[0].id : users[1].id,
+              name: messages && messages.length % 5 === 0 ? users[0].name : users[1].name,
+              avatar: undefined,
+            }}
+            placeholder="Type you message here..."
+            renderMessage={renderMessage}
+          />
+        </MainLayout>
+      ) : <View/>}
+    </>
   );
 };
 
