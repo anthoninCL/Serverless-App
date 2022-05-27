@@ -58,7 +58,7 @@ userRouter.post("/user", isAuthorized({hasRole: ["admin"]}),
             members: admin.firestore.FieldValue.arrayUnion(userRecord.uid),
           });
           console.log("User added to database");
-          res.status(201).send(`Created a new user: ${userRecord.uid}`);
+          res.status(201).send({id: userRecord.uid});
         }).catch((error) => {
           res.status(500).send(error);
         });

@@ -54,7 +54,7 @@ messageRouter.post("/:friendId/message", async (req, res) => {
     await db.collection(friendCollection).doc(req.params.friendId).update({
       messages: admin.firestore.FieldValue.arrayUnion(message.id),
     });
-    res.status(200).json(`New message created: ${message.id}`);
+    res.status(200).json({id: message.id});
   } catch (error) {
     res.status(500).send(error);
   }

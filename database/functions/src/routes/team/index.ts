@@ -55,7 +55,7 @@ teamRouter.post("/team", isAuthorized({hasRole: ["admin"]}), async (req, res) =>
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    res.status(200).json(`New team created: ${team.id}`);
+    res.status(200).json({id: team.id});
   } catch (e) {
     res.status(500).send(e);
   }
