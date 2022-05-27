@@ -11,6 +11,8 @@ import useUser from "../../../hooks/useUser";
 
 type Props = {
   team?: Team;
+  teams: Team[];
+  setCurrentTeam: (team: Team) => void;
 };
 
 export const CurrentTeamLayout = (props: Props) => {
@@ -63,6 +65,8 @@ export const CurrentTeamLayout = (props: Props) => {
           onBackDropPress={toggleVisibility}
           currentTeam={props.team}
           users={users}
+          teams={props.teams}
+          setCurrentTeam={props.setCurrentTeam}
         />
       )}
     </ViewRow>

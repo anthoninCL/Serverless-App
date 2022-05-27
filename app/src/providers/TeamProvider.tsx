@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useMemo, useState } from "react";
 import { Team } from "../types/Team";
 import { useTranslation } from "react-i18next";
 import fetchJSON from "../utils/fetchJSON";
-import {formatData, formatSimpleData} from "../utils/formatData";
+import { formatData, formatSimpleData } from "../utils/formatData";
 
 type TeamProps = {
   team: Team;
@@ -13,18 +13,19 @@ type TeamProps = {
   createTeam: () => {};
   updateTeam: () => {};
   deleteTeam: () => {};
-}
+  refreshTeams: () => {};
+};
 
 export const TeamContext = createContext<TeamProps>({} as TeamProps);
 
 type Props = {
   children: React.ReactNode;
-}
+};
 
-export const TeamProvider = ({children}: Props) => {
+export const TeamProvider = ({ children }: Props) => {
   const { t } = useTranslation();
-  const [team, setTeam] = useState<Team>([])
-  const [teams, setTeams] = useState<Team[]>([])
+  const [team, setTeam] = useState<Team>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
   const [isFetching, setIsFetching] = useState(false);
 
   // Fetch one team by id
@@ -33,8 +34,8 @@ export const TeamProvider = ({children}: Props) => {
       setIsFetching(true);
       const res = await fetchJSON({
         url: `team/${id}`,
-        method: 'GET',
-      })
+        method: "GET",
+      });
       const formatedRes = formatSimpleData(res);
       setTeam(formatedRes as unknown as Team);
       setIsFetching(false);
@@ -42,7 +43,8 @@ export const TeamProvider = ({children}: Props) => {
       return formatedRes;
     } catch (e) {
       console.log(e);
-    } return null;
+    }
+    return null;
   }, []);
 
   // Get list of teams
@@ -51,8 +53,8 @@ export const TeamProvider = ({children}: Props) => {
       setIsFetching(true);
       const res = await fetchJSON({
         url: `team`,
-        method: 'GET',
-      })
+        method: "GET",
+      });
       const formatedRes = formatData(res);
       setTeams(formatedRes as unknown as Team[]);
       setIsFetching(false);
@@ -60,7 +62,8 @@ export const TeamProvider = ({children}: Props) => {
       return formatedRes;
     } catch (e) {
       console.log(e);
-    } return null;
+    }
+    return null;
   }, []);
 
   // Refresh teams list
@@ -69,8 +72,8 @@ export const TeamProvider = ({children}: Props) => {
       setIsFetching(true);
       const res = await fetchJSON({
         url: `team`,
-        method: 'GET',
-      })
+        method: "GET",
+      });
       const formatedRes = formatData(res);
       setTeams(formatedRes as unknown as Team[]);
       setIsFetching(false);
@@ -78,48 +81,57 @@ export const TeamProvider = ({children}: Props) => {
       return formatedRes;
     } catch (e) {
       console.log(e);
-    } return null;
+    }
+    return null;
   }, []);
 
-  const createTeam = useCallback(async (
-    name: string, members: Array<string>
-  ) => {
-    const payload = {
-      name,
-      members
-    }
-    try {
-      await fetchJSON({
-        url: `team`,
-        method: 'POST',
-        payload
-      })
-      await refreshTeams();
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+  const createTeam = useCallback(
+    async (name: string, members: Array<string>) => {
+      const payload = {
+        name,
+        members,
+      };
+      try {
+        await fetchJSON({
+          url: `team`,
+          method: "POST",
+          payload,
+        });
+        await refreshTeams();
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    []
+  );
 
-  const updateTeam = useCallback(async (
-    id: string, name: string, members: Array<string>, channels: Array<string>, photo: string
-  ) => {
-    const payload = {
-      name,
-      members,
-      channels,
-      photo
-    }
-    try {
-      await fetchJSON({
-        url: `team/${id}`,
-        method: 'PUT',
-        payload
-      })
-      await refreshTeams();
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+  const updateTeam = useCallback(
+    async (
+      id: string,
+      name: string,
+      members: Array<string>,
+      channels: Array<string>,
+      photo: string
+    ) => {
+      const payload = {
+        name,
+        members,
+        channels,
+        photo,
+      };
+      try {
+        await fetchJSON({
+          url: `team/${id}`,
+          method: "PUT",
+          payload,
+        });
+        await refreshTeams();
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    []
+  );
 
   // Delete one team by id
   const deleteTeam = useCallback(async (id: string) => {
@@ -127,16 +139,14 @@ export const TeamProvider = ({children}: Props) => {
       setIsFetching(true);
       const res = await fetchJSON({
         url: `team/${id}`,
-        method: 'DELETE',
-      })
-      const formatedRes = formatSimpleData(res);
-      setTeam(formatedRes as unknown as Team);
+        method: "DELETE",
+      });
       setIsFetching(false);
-
-      return formatedRes;
+      return true;
     } catch (e) {
-      console.log(e);
-    } return null;
+      console.log(e.message);
+    }
+    return false;
   }, []);
 
   const value: TeamProps = useMemo(
@@ -148,17 +158,21 @@ export const TeamProvider = ({children}: Props) => {
       fetchTeams,
       createTeam,
       updateTeam,
-      deleteTeam
-  }), [
-    team,
+      deleteTeam,
+      refreshTeams,
+    }),
+    [
+      team,
       teams,
       isFetching,
       fetchTeam,
       fetchTeams,
       createTeam,
       updateTeam,
-      deleteTeam
-      ]);
+      deleteTeam,
+      refreshTeams,
+    ]
+  );
 
-  return <TeamContext.Provider value={value}>{children}</TeamContext.Provider>
+  return <TeamContext.Provider value={value}>{children}</TeamContext.Provider>;
 };

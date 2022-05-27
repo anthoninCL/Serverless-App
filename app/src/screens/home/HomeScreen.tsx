@@ -261,6 +261,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
           currentConv={currentConv}
           onTeamClicked={setCurrentTeam}
           setCurrentConvPrivacy={setCurrentConvPrivacy}
+          setCurrentTeam={setCurrentTeam}
           onConvClicked={setCurrentConv}
           teams={teams}
           channels={channels}

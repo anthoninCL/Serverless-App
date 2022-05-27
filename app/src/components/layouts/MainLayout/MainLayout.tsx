@@ -31,6 +31,7 @@ type Props = {
   onTeamClicked: (newValue: number) => void;
   onConvClicked: (newValue: number) => void;
   setCurrentConvPrivacy: (newValue: boolean) => void;
+  setCurrentTeam: (currentTeam: Team) => void;
   signOut: () => void;
   deleteAccount: () => void;
 };
@@ -107,7 +108,11 @@ export const MainLayout = (props: Props) => {
                 borderColor: "#393939",
               }}
             >
-              <CurrentTeamLayout team={props.teams[props.currentTeam]} />
+              <CurrentTeamLayout
+                team={props.teams[props.currentTeam]}
+                teams={props.teams}
+                setCurrentTeam={props.setCurrentTeam}
+              />
               <ConvLayout
                 setCurrentConvPrivacy={props.setCurrentConvPrivacy}
                 onConvClicked={props.onConvClicked}

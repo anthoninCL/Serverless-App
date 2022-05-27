@@ -30,7 +30,6 @@ export const AutocompleteList = (props: Props) => {
 
   useEffect(() => {
     if (props.selectedIds) {
-      console.log(props.selectedIds);
       const tmpList = [];
       props.selectedIds.forEach((selectedId: string) => {
         const idx = data.map((object) => object.id).indexOf(selectedId);
@@ -66,7 +65,6 @@ export const AutocompleteList = (props: Props) => {
       setFilteredData(tmpListFiltered);
       props.selectedIds.push(item.id);
       props.setSelectedIds(props.selectedIds);
-      console.log(props.selectedIds);
     } else {
       const tmpList = [...selectedList];
       tmpList.splice(idx, 1);
