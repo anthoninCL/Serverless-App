@@ -23,7 +23,7 @@ teamIdRouter.get("/:teamId", async (req, res) => {
   db.collection(teamCollection).doc(teamId).get()
       .then((team) => {
         if (!team.exists) throw new Error("Team not found");
-        if (team.data()?.members.includes(res.locals.uid) || res.locals.role == "admin") {
+        if (team.data()?.members.includes(res.locals.uid) || res.locals.roles.includes("admin")) {
           res.status(200).json({id: team.id, data: team.data()});
         } else {
           throw new Error("Not authorized");

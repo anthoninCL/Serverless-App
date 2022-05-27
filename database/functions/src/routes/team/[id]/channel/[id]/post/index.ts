@@ -67,7 +67,7 @@ postRouter.post("/:teamId/channel/:channelId/post", async (req, res) => {
     await db.collection(channelCollection).doc(req.params.channelId).update({
       posts: admin.firestore.FieldValue.arrayUnion(post.id),
     });
-    res.status(200).json(`New post created: ${post.id}`);
+    res.status(200).json({id: post.id});
   } catch (error) {
     res.status(500).send(error);
   }

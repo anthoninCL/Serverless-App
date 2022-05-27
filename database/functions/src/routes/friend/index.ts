@@ -49,7 +49,7 @@ friendRouter.post("/friend", async (req, res) => {
       messages: [],
     });
 
-    res.status(200).json(`New friendship created: ${friend.id}`);
+    res.status(200).json({id: friend.id});
   } catch (error) {
     res.status(500).send(error);
   }
