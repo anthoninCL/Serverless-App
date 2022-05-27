@@ -50,7 +50,7 @@ teamRouter.post("/team", isAuthorized({hasRole: ["admin"]}), async (req, res) =>
   try {
     const team = await db.collection(teamCollection).add({
       name: req.body.name,
-      members: [res.locals.uid],
+      members: req.body.members || [res.locals.uid],
       channels: [],
       createdAt: new Date(),
       updatedAt: new Date(),
