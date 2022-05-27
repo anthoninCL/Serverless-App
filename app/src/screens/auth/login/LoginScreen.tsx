@@ -15,6 +15,7 @@ import useAlert from "providers/AlertProvider";
 import { useTranslation } from "react-i18next";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebase";
+import { storeData } from "../../../utils/fnAsyncStorage";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, "login">;
 
@@ -32,11 +33,8 @@ const LoginScreen = ({ navigation }: ScreenProps) => {
   const handleLogin = async (email: string, password: string) => {
     const isUserLogged = await signin(email, password);
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate("Root");
-    } catch (error) {
-      alert(error.message);
+    if (isUserLogged) {
+      navigation.navigate("home");
     }
   };
 

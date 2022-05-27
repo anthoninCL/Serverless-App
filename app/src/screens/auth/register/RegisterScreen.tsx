@@ -26,8 +26,7 @@ const RegisterScreen = ({ navigation }: ScreenProps) => {
   const styles = fnStyles(theme);
   const { setAlert } = useAlert();
   const { t } = useTranslation();
-  const { register, isRegisterError: isFetchingError } = useAuth();
-
+  const { register, signin, isRegisterError: isFetchingError } = useAuth();
   const handleAlreadyHaveAnAccount = () => {
     navigation.navigate("login");
   };
@@ -37,11 +36,13 @@ const RegisterScreen = ({ navigation }: ScreenProps) => {
     email: string,
     password: string
   ) => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigation.navigate("Root");
-    } catch (error) {
-      alert(error.message);
+    const isUserResistered = await register(username, email, password);
+
+    if (isUserResistered) {
+      const isUserLogged = await signin(email, password);
+      if (isUserLogged) {
+        navigation.navigate("home");
+      }
     }
   };
 
