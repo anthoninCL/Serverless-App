@@ -1,6 +1,7 @@
 import React, { createContext, useMemo, useState, useCallback } from "react";
 import { User } from "../types/User";
 import fetchJSON from "../utils/fetchJSON";
+import { formatData } from "../utils/formatData";
 
 type UserProps = {
   users: User[];
@@ -26,14 +27,9 @@ export const UserProvider = ({ children }: Props) => {
         method: "GET",
       });
 
-      const tmpList = [];
-      res.forEach((user) => {
-        user["data"].id = user["id"];
-        tmpList.push(user["data"]);
-      });
-
+      const formatedRes = formatData(res);
       setIsFetching(false);
-      setUsers(tmpList);
+      setUsers(formatedRes as unknown as User[]);
       return res;
     } catch (e) {
       console.log(e.message);

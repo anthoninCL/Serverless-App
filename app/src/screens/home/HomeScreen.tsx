@@ -97,11 +97,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     fetchTeams();
   }, []);
 
-<<<<<<< HEAD
   //console.log(team);
-=======
-  console.log(teams);
->>>>>>> 89d845a93451b20da66a85a3929d678fb331ccec
 
   // TODO FAIRE LE MÉNAGE !!!
   const firstTeam: Team = {
@@ -275,17 +271,25 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
         >
           <GiftedChat
             messages={messages}
-            onSend={messages => onMessageSend(messages)}
+            onSend={(messages) => onMessageSend(messages)}
             user={{
-              _id: messages && messages.length % 5 === 0 ? users[0].id : users[1].id,
-              name: messages && messages.length % 5 === 0 ? users[0].name : users[1].name,
+              _id:
+                messages && messages.length % 5 === 0
+                  ? users[0].id
+                  : users[1].id,
+              name:
+                messages && messages.length % 5 === 0
+                  ? users[0].name
+                  : users[1].name,
               avatar: undefined,
             }}
             placeholder="Type you message here..."
             renderMessage={renderMessage}
           />
         </MainLayout>
-      ) : <View/>}
+      ) : (
+        <View />
+      )}
     </>
   );
 };
