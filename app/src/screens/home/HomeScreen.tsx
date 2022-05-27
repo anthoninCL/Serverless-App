@@ -14,6 +14,7 @@ import { Friend } from "../../types/Friend";
 import { ViewCol } from "../../components/layouts/FlexLayout/FlexViews";
 import useAuth from "../../hooks/useAuth";
 import {ChatHeaderLayout} from "../../components/layouts/ChatHeaderLayout/ChatHeaderLayout";
+import useTeam from "../../hooks/useTeam";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, "home">;
 
@@ -89,6 +90,15 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   const [isCurrentConvPrivate, setCurrentConvPrivacy] = useState(false);
   const [currentConv, setCurrentConv] = useState(0);
   const { signout } = useAuth();
+  const { fetchTeams, team } = useTeam();
+
+  useEffect(() => {
+    fetchTeams();
+  }, []);
+
+  console.log(team);
+
+  // TODO FAIRE LE MÉNAGE !!!
   const firstTeam: Team = {
     id: "1",
     name: "Watchelp",

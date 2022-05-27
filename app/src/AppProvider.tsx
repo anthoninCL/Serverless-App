@@ -4,6 +4,7 @@ import { LoadingProvider } from 'providers/LoadingProvider';
 import { ThemeProvider } from 'providers/ThemeProvider';
 import { AuthProvider } from "providers/AuthProvider";
 import {AlertProvider} from "./providers/AlertProvider";
+import {TeamProvider} from "./providers/TeamProvider";
 
 type Props = {
   children: JSX.Element;
@@ -15,7 +16,9 @@ const AppProvider = ({ children }: Props) => (
       <LoadingProvider>
         <AlertProvider>
           <AuthProvider>
-            {children}
+            <TeamProvider>
+              {children}
+            </TeamProvider>
           </AuthProvider>
         </AlertProvider>
       </LoadingProvider>
