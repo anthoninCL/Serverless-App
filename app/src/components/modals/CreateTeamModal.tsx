@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Text } from "react-native";
 import { Overlay } from "react-native-elements";
 import useTheme from "../../hooks/useTheme";
@@ -8,20 +8,30 @@ import { FormInput } from "../common/FormInput/FormInput";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 import { MultiSelectList } from "../common/MultiSelectList/MultiSelectList";
 import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
+import { User } from "../../types/User";
+import useTeam from "../../hooks/useTeam";
 
 type Props = {
   isVisible: boolean;
   onBackDropPress: () => void;
+  users: User[];
 };
 
 export const CreateTeamModal = (props: Props) => {
   const { theme } = useTheme();
+  const { createTeam } = useTeam();
   const [name, setName] = useState("");
   const [buttonEnabled, setButtonEnabled] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   useEffect(() => {
     setButtonEnabled(name.length > 0);
   }, [name]);
+
+  // TODO : CLOSE MODALE SI LA TEAM EST CRÉÉE
+  const handleCreateTeam = () => {
+    createTeam(name, selectedIds);
+  };
 
   return (
     <Overlay
@@ -66,8 +76,10 @@ export const CreateTeamModal = (props: Props) => {
           style={{ marginBottom: 20 }}
         />
         <AutocompleteList
-          data={["Thomas", "Mathieux", "Antho la merde", "Lucas le roi "]}
+          data={props.users}
           isMultiSelect
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
         />
         <ViewRow align={"center"} style={{ marginTop: 20 }}>
           <Text
@@ -81,7 +93,7 @@ export const CreateTeamModal = (props: Props) => {
             mistake by adding wrong people to your team.
           </Text>
           <ClassicButton
-            onPress={() => {}}
+            onPress={handleCreateTeam}
             labelKey={"common.create"}
             type={"classic"}
             enabled={buttonEnabled}

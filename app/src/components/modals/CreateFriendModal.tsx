@@ -6,10 +6,12 @@ import { ViewCol, ViewRow } from "../layouts/FlexLayout/FlexViews";
 import { ClickableIcon } from "../common/ClickableIcon/ClickableIcon";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
+import { User } from "../../types/User";
 
 type Props = {
   isVisible: boolean;
   onBackDropPress: () => void;
+  users: User[];
 };
 
 export const CreateFriendModal = (props: Props) => {
@@ -51,9 +53,7 @@ export const CreateFriendModal = (props: Props) => {
           You can add friends to talk with them in private messages. Don't
           worry, you can remove them if they're annoying.
         </Text>
-        <AutocompleteList
-          data={["Thomas", "Mathieux", "Antho la merde", "Lucas le roi "]}
-        />
+        <AutocompleteList data={props.users} />
         <ViewRow align={"center"} style={{ marginTop: 20 }}>
           <Text
             style={{

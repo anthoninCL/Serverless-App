@@ -8,21 +8,58 @@ import { FormInput } from "../common/FormInput/FormInput";
 import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 import { Team } from "../../types/Team";
 import { AutocompleteList } from "../common/Autocomplete/AutocompleteList";
+import { User } from "../../types/User";
+import useTeam from "../../hooks/useTeam";
 
 type Props = {
   isVisible: boolean;
   onBackDropPress: () => void;
   currentTeam: Team;
+  users: User[];
+  teams: Team[];
+  setCurrentTeam: (team: Team) => void;
 };
 
 export const ManageTeamModal = (props: Props) => {
   const { theme } = useTheme();
   const [name, setName] = useState(props.currentTeam.name);
   const [buttonEnabled, setButtonEnabled] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(
+    props.currentTeam.members.map((id) => id)
+  );
+
+  const { updateTeam, deleteTeam, refreshTeams } = useTeam();
+
+  const handleModifyTeam = () => {
+    updateTeam(
+      props.currentTeam.id,
+      name,
+      selectedIds,
+      props.currentTeam.channels,
+      props.currentTeam.photo
+    );
+  };
+
+  const handleDeleteTeam = async () => {
+    await deleteTeam(props.currentTeam.id);
+    for (var team of props.teams) {
+      if (team.id != props.currentTeam.id) {
+        props.setCurrentTeam(team);
+        console.log("j'ai choisi: ", team);
+        break;
+      }
+    }
+    await refreshTeams();
+  };
 
   useEffect(() => {
-    setButtonEnabled(name.length > 0 && name != props.currentTeam.name);
+    setButtonEnabled(name.length > 0);
   }, [name]);
+
+  useEffect(() => {
+    setSelectedIds(props.currentTeam.members.map((id) => id));
+    setName(props.currentTeam.name);
+  }, [props.currentTeam]);
 
   return (
     <Overlay
@@ -67,8 +104,10 @@ export const ManageTeamModal = (props: Props) => {
           style={{ marginBottom: 20 }}
         />
         <AutocompleteList
-          data={["Thomas", "Mathieux", "Antho la merde", "Lucas le roi "]}
+          data={props.users}
           isMultiSelect
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
         />
         <ViewRow
           justify={"space-between"}
@@ -76,12 +115,12 @@ export const ManageTeamModal = (props: Props) => {
           style={{ marginTop: 20 }}
         >
           <ClassicButton
-            onPress={() => {}}
+            onPress={handleDeleteTeam}
             labelKey={"common.delete"}
             type={"danger"}
           />
           <ClassicButton
-            onPress={() => {}}
+            onPress={handleModifyTeam}
             labelKey={"common.update"}
             type={"classic"}
             enabled={buttonEnabled}

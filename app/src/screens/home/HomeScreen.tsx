@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from 'navigation/RootStackParamLis';
+import React, { useCallback, useEffect, useState } from "react";
+import { View } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "navigation/RootStackParamLis";
 import { MainLayout } from "../../components/layouts/MainLayout/MainLayout";
 import { MessageComponent } from "../../components/common/ChatMessage/ChatMessage";
 import { Message } from "../../types/Message";
@@ -13,8 +13,10 @@ import { Channel } from "../../types/Channel";
 import { Friend } from "../../types/Friend";
 import { ViewCol } from "../../components/layouts/FlexLayout/FlexViews";
 import useAuth from "../../hooks/useAuth";
-import {ChatHeaderLayout} from "../../components/layouts/ChatHeaderLayout/ChatHeaderLayout";
+import { ChatHeaderLayout } from "../../components/layouts/ChatHeaderLayout/ChatHeaderLayout";
 import useTeam from "../../hooks/useTeam";
+import useUser from "../../hooks/useUser";
+import useFriend from "../../hooks/useFriend";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, "home">;
 
@@ -53,50 +55,53 @@ const exampleMessages: Message[] = [
     content: "Salut",
     createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
-    user: users[0]
+    user: users[0],
   },
   {
     id: "2",
     content: "Coucou ça va ?",
     createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
-    user: users[1]
+    user: users[1],
   },
   {
     id: "3",
     content: "Ca va super merci beaucoup !!!",
     createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
-    user: users[0]
+    user: users[0],
   },
   {
     id: "4",
     content: "Regarde ce chouette message",
     createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
-    user: users[0]
+    user: users[0],
   },
   {
     id: "5",
     content: "Dernier message LOOOOOOOOL",
     createdAt: dayjs().toString(),
     updatedAt: dayjs().toString(),
-    user: users[2]
-  }
-]
+    user: users[2],
+  },
+];
 
 const HomeScreen = ({ navigation }: ScreenProps) => {
   const [currentTeam, setCurrentTeam] = useState(0);
   const [isCurrentConvPrivate, setCurrentConvPrivacy] = useState(false);
   const [currentConv, setCurrentConv] = useState(0);
   const { signout } = useAuth();
-  const { fetchTeams, team } = useTeam();
+  const { fetchTeams, teams, isFetching: isTeamFetching } = useTeam();
+  const { fetchFriends, friends } = useFriend();
 
   useEffect(() => {
     fetchTeams();
+    fetchFriends();
   }, []);
 
-  console.log(team);
+  console.log(friends);
+  //console.log(team);
 
   // TODO FAIRE LE MÉNAGE !!!
   const firstTeam: Team = {
@@ -161,27 +166,31 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     userId: currentUser,
     createdAt: "",
   };
-  const teams = [firstTeam, secondTeam];
+  // const teams = [firstTeam, secondTeam];
   const channels = [firstChannel, secondChannel];
-  const friends = [firstFriend, secondFriend];
+  //const friends = [firstFriend, secondFriend];
   //const {theme} = useTheme();
   //const styles = fnStyles(theme);
   const conversationMessages = exampleMessages; // TODO : get les messages de la conversation
   const [messages, setMessages] = useState<IMessage[]>();
 
   useEffect(() => {
-    const prepareMessages = conversationMessages?.map((message: Message, index: number) => {
-      return {
-        _id: `old_${index}`, // TODO : mettre l'id du message
-        text: message.content,
-        createdAt: dayjs(message.createdAt).toDate(),
-        user: {
-          _id: typeof message.user !== "string" ? message.user?.id : undefined,
-          name: typeof message.user !== "string" ? message.user?.name : undefined,
-          avatar: undefined,
-        },
-      };
-    }) as IMessage[];
+    const prepareMessages = conversationMessages?.map(
+      (message: Message, index: number) => {
+        return {
+          _id: `old_${index}`, // TODO : mettre l'id du message
+          text: message.content,
+          createdAt: dayjs(message.createdAt).toDate(),
+          user: {
+            _id:
+              typeof message.user !== "string" ? message.user?.id : undefined,
+            name:
+              typeof message.user !== "string" ? message.user?.name : undefined,
+            avatar: undefined,
+          },
+        };
+      }
+    ) as IMessage[];
 
     if (prepareMessages) {
       const orderedMessages = prepareMessages.reverse();
@@ -190,32 +199,37 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   }, []);
 
   const onMessageSend = useCallback((messages: IMessage[] = []) => {
-    setMessages(previousMessages => {
+    setMessages((previousMessages) => {
       return GiftedChat.append(previousMessages, messages);
-    })
+    });
   }, []);
 
   const renderMessage = (props) => {
-    return <View>
-      <ViewCol>
-        <MessageComponent
-          previousMessage={props.previousMessage}
-          currentMessage={props.currentMessage}
-          nextMessage={props.nextMessage }
-          // TODO: regarder si le message est un post ou non pour changer la couleur
-          backgroundColor={props.currentMessage.user._id === users[0].id ? "#E4E4E4" : "white"}
-        />
-      </ViewCol>
-    </View>
-
-  }
+    return (
+      <View>
+        <ViewCol>
+          <MessageComponent
+            previousMessage={props.previousMessage}
+            currentMessage={props.currentMessage}
+            nextMessage={props.nextMessage}
+            // TODO: regarder si le message est un post ou non pour changer la couleur
+            backgroundColor={
+              props.currentMessage.user._id === users[0].id
+                ? "#E4E4E4"
+                : "white"
+            }
+          />
+        </ViewCol>
+      </View>
+    );
+  };
 
   // TODO move the two next functions to AuthProvider
   const signOut = () => {
     signout();
     navigation.reset({
       index: 0,
-      routes: [{ name: 'login'}],
+      routes: [{ name: "login" }],
     });
   };
 
@@ -223,7 +237,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     // deleteAccount(currentUser.id);
     navigation.reset({
       index: 0,
-      routes: [{ name: 'login'}],
+      routes: [{ name: "login" }],
     });
   };
 
@@ -243,32 +257,45 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   }, []);*/
 
   return (
-    <MainLayout
-      currentTeam={currentTeam}
-      isCurrentConvPrivate={isCurrentConvPrivate}
-      currentConv={currentConv}
-      onTeamClicked={setCurrentTeam}
-      setCurrentConvPrivacy={setCurrentConvPrivacy}
-      onConvClicked={setCurrentConv}
-      teams={teams}
-      channels={channels}
-      friends={friends}
-      currentUser={currentUser}
-      signOut={signOut}
-      deleteAccount={deleteAccount}
-    >
-      <GiftedChat
-        messages={messages}
-        onSend={messages => onMessageSend(messages)}
-        user={{
-          _id: messages && messages.length % 5 === 0 ? users[0].id : users[1].id,
-          name: messages && messages.length % 5 === 0 ? users[0].name : users[1].name,
-          avatar: undefined,
-        }}
-        placeholder="Type you message here..."
-        renderMessage={renderMessage}
-      />
-    </MainLayout>
+    <>
+      {!isTeamFetching ? (
+        <MainLayout
+          currentTeam={currentTeam}
+          isCurrentConvPrivate={isCurrentConvPrivate}
+          currentConv={currentConv}
+          onTeamClicked={setCurrentTeam}
+          setCurrentConvPrivacy={setCurrentConvPrivacy}
+          setCurrentTeam={setCurrentTeam}
+          onConvClicked={setCurrentConv}
+          teams={teams}
+          channels={channels}
+          friends={friends}
+          currentUser={currentUser}
+          signOut={signOut}
+          deleteAccount={deleteAccount}
+        >
+          <GiftedChat
+            messages={messages}
+            onSend={(messages) => onMessageSend(messages)}
+            user={{
+              _id:
+                messages && messages.length % 5 === 0
+                  ? users[0].id
+                  : users[1].id,
+              name:
+                messages && messages.length % 5 === 0
+                  ? users[0].name
+                  : users[1].name,
+              avatar: undefined,
+            }}
+            placeholder="Type you message here..."
+            renderMessage={renderMessage}
+          />
+        </MainLayout>
+      ) : (
+        <View />
+      )}
+    </>
   );
 };
 
