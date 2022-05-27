@@ -8,11 +8,11 @@ type TeamProps = {
   team: Team;
   teams: Team[];
   isFetching: boolean;
-  fetchTeam: () => {};
+  fetchTeam: (id: string) => {};
   fetchTeams: () => {};
-  createTeam: () => {};
-  updateTeam: () => {};
-  deleteTeam: () => {};
+  createTeam: (name: string, members: Array<string>) => {};
+  updateTeam: (id: string, name?: string, members?: Array<string>, channels?: Array<string>, photo?: string) => {};
+  deleteTeam: (id: string) => {};
   refreshTeams: () => {};
 };
 
@@ -24,7 +24,7 @@ type Props = {
 
 export const TeamProvider = ({ children }: Props) => {
   const { t } = useTranslation();
-  const [team, setTeam] = useState<Team>([]);
+  const [team, setTeam] = useState<Team>();
   const [teams, setTeams] = useState<Team[]>([]);
   const [isFetching, setIsFetching] = useState(false);
 
@@ -108,10 +108,10 @@ export const TeamProvider = ({ children }: Props) => {
   const updateTeam = useCallback(
     async (
       id: string,
-      name: string,
-      members: Array<string>,
-      channels: Array<string>,
-      photo: string
+      name?: string,
+      members?: Array<string>,
+      channels?: Array<string>,
+      photo?: string
     ) => {
       const payload = {
         name,
