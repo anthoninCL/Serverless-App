@@ -13,9 +13,9 @@ export const teamIsAuthorized = async (req: Request, res: Response, next: NextFu
     } else {
       isAuthorized({hasRole: ["admin"]})(req, res, next);
     }
+  } else {
+    res.status(404).send("Team not found");
   }
-
-  res.status(404).send("Team not found");
 };
 
 teamIdRouter.get("/:teamId", async (req, res) => {
