@@ -13,9 +13,9 @@ export const friendIsAuthorized = async (req: Request, res: Response, next: Next
     } else {
       isAuthorized({hasRole: ["admin"]})(req, res, next);
     }
+  } else {
+    res.status(400).send("friendship don't exist");
   }
-
-  res.status(400).send("friendship is not exist");
 };
 
 friendIdRouter.use("/:friendId", friendIsAuthorized);
