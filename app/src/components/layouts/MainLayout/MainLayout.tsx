@@ -18,6 +18,8 @@ import { ConvLayout } from "./ConvLayout";
 import { UserModal } from "../../modals/UserModal";
 import { UpdateProfileModal } from "../../modals/UpdateProfileModal";
 import { ChatHeaderLayout } from "../ChatHeaderLayout/ChatHeaderLayout";
+import useUser from "../../../hooks/useUser";
+import {FriendName} from "../../../utils/friendName";
 
 type Props = {
   children?: React.ReactNode;
@@ -27,6 +29,7 @@ type Props = {
   currentTeam?: number;
   currentConv?: number;
   currentUser: User;
+  users?: User[];
   isCurrentConvPrivate?: boolean;
   onTeamClicked: (newValue: number) => void;
   onConvClicked: (newValue: number) => void;
@@ -39,6 +42,8 @@ type Props = {
 export const MainLayout = (props: Props) => {
   const [isUserModalVisible, setUserModalVisibility] = useState(false);
   const [isProfileModalVisible, setProfileModalVisibility] = useState(false);
+  const [currentFriendName, setCurrentFriendName] = useState('');
+  const currentTeam = props.currentTeam ?? 0;
 
   const onProfilePicClicked = () => {
     setUserModalVisibility(!isUserModalVisible);
@@ -52,6 +57,17 @@ export const MainLayout = (props: Props) => {
     setProfileModalVisibility(!isProfileModalVisible);
     removeProfileModal();
   };
+
+  useEffect(() => {
+    const getUser = async () => {
+      const name = await FriendName(props.friends[props.currentConv].users, props.users);
+      setCurrentFriendName(name);
+    };
+
+    if (props.isCurrentConvPrivate) {
+      getUser().catch(console.error);
+    }
+  }, [props.isCurrentConvPrivate, props.currentConv, props.users, props.friends]);
 
   return (
     <TouchableOpacity
@@ -74,12 +90,7 @@ export const MainLayout = (props: Props) => {
         >
           <View />
           <Text style={{ color: "#FFF", fontWeight: "600" }}>
-            Club Manchot | {props.teams[props.currentTeam]?.name} |{" "}
-            {props.isCurrentConvPrivate
-              ? typeof props.friends[props.currentConv].friendId === "string"
-                ? props.friends[props.currentConv].friendId
-                : props.friends[props.currentConv].friendId.name
-              : props.channels[props.currentConv]?.name}
+            Club Manchot
           </Text>
           <TouchableOpacity onPress={onProfilePicClicked}>
             <Avatar sizeName={"sz35"} />
@@ -97,7 +108,7 @@ export const MainLayout = (props: Props) => {
             <TeamLayout
               onTeamClicked={props.onTeamClicked}
               teams={props.teams}
-              currentTeam={props.currentTeam}
+              currentTeam={currentTeam}
             />
             <ViewCol
               style={{
@@ -109,7 +120,7 @@ export const MainLayout = (props: Props) => {
               }}
             >
               <CurrentTeamLayout
-                team={props.teams[props.currentTeam]}
+                team={props.teams[currentTeam]}
                 teams={props.teams}
                 setCurrentTeam={props.setCurrentTeam}
               />
@@ -117,6 +128,7 @@ export const MainLayout = (props: Props) => {
                 setCurrentConvPrivacy={props.setCurrentConvPrivacy}
                 onConvClicked={props.onConvClicked}
                 channels={props.channels}
+                currentTeam={props.teams[currentTeam]?.id}
                 friends={props.friends}
                 currentConv={props.currentConv}
                 isCurrentConvPrivate={props.isCurrentConvPrivate}
@@ -125,7 +137,7 @@ export const MainLayout = (props: Props) => {
           </ViewRow>
           <ViewRow style={{ flex: 1, height: "100%", backgroundColor: "#FFF" }}>
             <ViewCol>
-              <ChatHeaderLayout {...props} />
+              <ChatHeaderLayout {...props} currentTeam={props.teams[currentTeam]?.id} />
               {props.children}
             </ViewCol>
           </ViewRow>

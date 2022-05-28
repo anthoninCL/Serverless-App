@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import {View, Text, TouchableOpacity, ActivityIndicator} from "react-native";
 import { ViewCol, ViewRow } from "../FlexLayout/FlexViews";
 import { Avatar } from "../../common/Avatar/Avatar";
 import useTheme from "../../../hooks/useTheme";
@@ -12,11 +12,14 @@ import { User } from "../../../types/User";
 import useUser from "../../../hooks/useUser";
 import { useEffect } from "react";
 import { getStoredData } from "../../../utils/fnAsyncStorage";
+import useChannel from "../../../hooks/useChannel";
+import useFriend from "../../../hooks/useFriend";
 
 type Props = {
   channels?: Channel[];
   friends?: Friend[];
   currentConv?: number;
+  currentTeam: string;
   isCurrentConvPrivate?: boolean;
   onConvClicked: (newValue: number) => void;
   setCurrentConvPrivacy: (newValue: boolean) => void;
@@ -28,7 +31,9 @@ export const ConvLayout = (props: Props) => {
   const [friendsOpen, setFriendsOpen] = useState(true);
   const [isChannelModalVisible, setChannelModalVisibility] = useState(false);
   const [isFriendModalVisible, setFriendModalVisibility] = useState(false);
-  const { fetchUsers, users, fetchUser } = useUser();
+  const { fetchUsers, users } = useUser();
+  const { fetchChannels, deleteChannel, updateChannel, createChannel, isFetching: isChannelFetching } = useChannel();
+  const { isFetching: isFriendFetching } = useFriend();
   const [uid, setUid] = useState("");
 
   const retrieveUid = async () => {
@@ -62,7 +67,7 @@ export const ConvLayout = (props: Props) => {
     setFriendsOpen(!friendsOpen);
   };
 
-  const getFriendName = (friends: string[]) => {
+  const getFriendName = (friends: string[], users: User[]) => {
     const idx = friends.indexOf(uid);
     if (idx != -1) {
       friends.splice(idx, 1);
@@ -74,9 +79,13 @@ export const ConvLayout = (props: Props) => {
     return "";
   };
 
+  useEffect(() => {
+    fetchChannels(props.currentTeam);
+  }, [props.currentTeam, createChannel, deleteChannel, updateChannel]);
+
   return (
-    <ScrollView>
-      <ViewCol style={{ marginTop: 20 }}>
+    <View>
+      <ViewCol style={{ marginTop: 20, marginBottom: 80 }}>
         <ViewRow style={{ paddingLeft: 10, paddingVertical: 5 }}>
           <ClickableIcon
             type={"AntDesign"}
@@ -95,7 +104,7 @@ export const ConvLayout = (props: Props) => {
             Channels
           </Text>
         </ViewRow>
-        {props.channels &&
+        {!isChannelFetching ? (props.channels &&
           props.channels.map((channel, key) => {
             return channelsOpen ||
               (props.currentConv === key && !props.isCurrentConvPrivate) ? (
@@ -126,7 +135,7 @@ export const ConvLayout = (props: Props) => {
                 </Text>
               </TouchableOpacity>
             ) : null;
-          })}
+          })) : <ActivityIndicator />}
         {channelsOpen && (
           <TouchableOpacity
             onPress={() => {}}
@@ -165,14 +174,6 @@ export const ConvLayout = (props: Props) => {
       <ViewCol
         style={{
           marginBottom: 20,
-          marginTop:
-            friendsOpen && channelsOpen
-              ? 20
-              : !friendsOpen && channelsOpen
-              ? 72
-              : friendsOpen && !channelsOpen
-              ? 0
-              : 52,
         }}
       >
         <ViewRow style={{ paddingLeft: 10, paddingVertical: 5 }}>
@@ -193,7 +194,7 @@ export const ConvLayout = (props: Props) => {
             Direct messages
           </Text>
         </ViewRow>
-        {props.friends &&
+        {!isFriendFetching ? (props.friends &&
           props.friends.map((friend, key) => {
             return friendsOpen ||
               (props.currentConv === key && props.isCurrentConvPrivate) ? (
@@ -224,14 +225,14 @@ export const ConvLayout = (props: Props) => {
                       fontSize: theme.fontSizes.large,
                     }}
                   >
-                    {getFriendName(friend.users)}
+                    {getFriendName(friend.users, users)}
                   </Text>
                 </ViewRow>
               </TouchableOpacity>
             ) : (
               <View />
             );
-          })}
+          })) : <ActivityIndicator/>}
         {friendsOpen && (
           <TouchableOpacity
             onPress={() => {}}
@@ -270,12 +271,14 @@ export const ConvLayout = (props: Props) => {
       <CreateChannelModal
         isVisible={isChannelModalVisible}
         onBackDropPress={toggleChannelModal}
+        createChannel={createChannel}
+        currentTeam={props.currentTeam}
       />
       <CreateFriendModal
         isVisible={isFriendModalVisible}
         onBackDropPress={toggleFriendModal}
         users={users}
       />
-    </ScrollView>
+    </View>
   );
 };

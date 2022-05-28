@@ -1,13 +1,14 @@
 import React, { createContext, useMemo, useState, useCallback } from "react";
 import { User } from "../types/User";
 import fetchJSON from "../utils/fetchJSON";
-import { formatData } from "../utils/formatData";
+import {formatData, formatSimpleData} from "../utils/formatData";
 
 type UserProps = {
   users: User[];
   isFetching: boolean;
   fetchUsers: () => {};
   fetchUser: (id: string) => User;
+  updateUser: (userId: string, name: string, firstName: string, lastName: string) => Promise<void>;
 };
 
 export const UserContext = createContext<UserProps>({} as UserProps);
@@ -46,7 +47,7 @@ export const UserProvider = ({ children }: Props) => {
         method: "GET",
       });
 
-      const formatedRes = formatData(res);
+      const formatedRes = formatSimpleData(res);
       setIsFetching(false);
       return formatedRes;
     } catch (e) {
@@ -55,14 +56,36 @@ export const UserProvider = ({ children }: Props) => {
     return null;
   }, []);
 
+  const updateUser = useCallback(
+    async (userId: string, name: string, firstName: string, lastName: string) => {
+      const payload = {
+        name,
+        firstName,
+        lastName,
+      };
+      try {
+        await fetchJSON({
+          url: `user/${userId}`,
+          method: "PUT",
+          payload,
+        });
+        await fetchUser(userId);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [fetchUser]
+  );
+
   const value: UserProps = useMemo(
     () => ({
       users,
       isFetching,
+      updateUser,
       fetchUsers,
       fetchUser,
     }),
-    [users, isFetching, fetchUsers, fetchUser]
+    [users, isFetching, fetchUsers, fetchUser, updateUser]
   );
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

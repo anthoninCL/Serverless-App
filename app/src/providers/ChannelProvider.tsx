@@ -1,6 +1,5 @@
 import React, { createContext, useCallback, useMemo, useState } from "react";
 import { Channel } from "../types/Channel";
-import { useTranslation } from "react-i18next";
 import fetchJSON from "../utils/fetchJSON";
 import { formatData, formatSimpleData } from "../utils/formatData";
 
@@ -29,7 +28,6 @@ type Props = {
 };
 
 export const ChannelProvider = ({ children }: Props) => {
-  const { t } = useTranslation();
   const [channel, setChannel] = useState<Channel>();
   const [channels, setChannels] = useState<Channel[]>([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -39,7 +37,7 @@ export const ChannelProvider = ({ children }: Props) => {
     try {
       setIsFetching(true);
       const res = await fetchJSON({
-        url: `${teamId}/channel/${id}`,
+        url: `team/${teamId}/channel/${id}`,
         method: "GET",
       });
       const formatedRes = formatSimpleData(res);
@@ -58,7 +56,7 @@ export const ChannelProvider = ({ children }: Props) => {
     try {
       setIsFetching(true);
       const res = await fetchJSON({
-        url: `${teamId}/channel`,
+        url: `team/${teamId}/channel`,
         method: "GET",
       });
       const formatedRes = formatData(res);
@@ -77,7 +75,7 @@ export const ChannelProvider = ({ children }: Props) => {
     try {
       setIsFetching(true);
       const res = await fetchJSON({
-        url: `${teamId}/channel`,
+        url: `team/${teamId}/channel`,
         method: "GET",
       });
       const formatedRes = formatData(res);
@@ -97,7 +95,7 @@ export const ChannelProvider = ({ children }: Props) => {
     };
     try {
       await fetchJSON({
-        url: `${teamId}/channel`,
+        url: `team/${teamId}/channel`,
         method: "POST",
         payload,
       });
@@ -122,7 +120,7 @@ export const ChannelProvider = ({ children }: Props) => {
       };
       try {
         await fetchJSON({
-          url: `${teamId}/channel/${id}`,
+          url: `team/${teamId}/channel/${id}`,
           method: "PUT",
           payload,
         });
@@ -139,9 +137,10 @@ export const ChannelProvider = ({ children }: Props) => {
     try {
       setIsFetching(true);
       const res = await fetchJSON({
-        url: `${teamId}/channel/${id}`,
+        url: `team/${teamId}/channel/${id}`,
         method: "DELETE",
       });
+      await fetchChannels(teamId);
       setIsFetching(false);
       return true;
     } catch (e) {
@@ -175,7 +174,7 @@ export const ChannelProvider = ({ children }: Props) => {
     ]
   );
 
-  /*return (
+  return (
     <ChannelContext.Provider value={value}>{children} </ChannelContext.Provider>
-  );*/
+  );
 };

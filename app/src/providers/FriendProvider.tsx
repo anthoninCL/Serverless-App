@@ -50,6 +50,7 @@ export const FriendProvider = ({ children }: Props) => {
         method: "POST",
         payload,
       });
+      await fetchFriends();
     } catch (e) {
       console.log(e);
     }
@@ -58,9 +59,10 @@ export const FriendProvider = ({ children }: Props) => {
   const deleteFriend = useCallback(async (id: string) => {
     try {
       await fetchJSON({
-        url: `team/${id}`,
+        url: `friend/${id}`,
         method: "DELETE",
       });
+      await fetchFriends();
     } catch (e) {
       console.log(e);
     }

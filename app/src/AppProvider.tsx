@@ -21,7 +21,9 @@ const AppProvider = ({ children }: Props) => (
           <AuthProvider>
             <UserProvider>
               <FriendProvider>
-                <TeamProvider>{children}</TeamProvider>
+                <ChannelProvider>
+                  <TeamProvider>{children}</TeamProvider>
+                </ChannelProvider>
               </FriendProvider>
             </UserProvider>
           </AuthProvider>

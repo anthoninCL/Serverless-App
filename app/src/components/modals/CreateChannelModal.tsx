@@ -10,6 +10,8 @@ import { ClassicButton } from "../common/ClassicButton/ClassicButton";
 type Props = {
   isVisible: boolean;
   onBackDropPress: () => void;
+  createChannel: (teamId: string, name: string) => {};
+  currentTeam: string;
 };
 
 export const CreateChannelModal = (props: Props) => {
@@ -75,7 +77,7 @@ export const CreateChannelModal = (props: Props) => {
             by choosing a wrong name.
           </Text>
           <ClassicButton
-            onPress={() => {}}
+            onPress={() => { props.createChannel(props.currentTeam, name); setName(''); props.onBackDropPress() }}
             labelKey={"common.create"}
             type={"classic"}
             enabled={buttonEnabled}

@@ -3,7 +3,8 @@ import React, { createContext, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { auth } from "../firebase";
 import { User } from "../types/User";
-import { removeStoredData, storeData } from "../utils/fnAsyncStorage";
+import {removeStoredData, storeData, storeObjectData} from "../utils/fnAsyncStorage";
+import fetchJSON from "../utils/fetchJSON";
 
 type Auth = {
   user?: User;
@@ -15,7 +16,6 @@ type Auth = {
     email: string,
     password: string
   ) => Promise<boolean | User>;
-  updateUser: (payload: any) => Promise<void>;
   isFetching: boolean;
   isSignInError: boolean;
   isRegisterError: boolean;
@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }: Props) => {
 
   const signout = useCallback(async () => {
     await removeStoredData("token");
+    await removeStoredData("uid");
   }, []);
 
   const refreshUser = useCallback(async () => {}, [signout]);
@@ -125,12 +126,7 @@ export const AuthProvider = ({ children }: Props) => {
     setErrorMessage(undefined);
   }, []);
 
-  const updateUser = useCallback(
-    async (payload) => {
-      setIsFetching(true);
-    },
-    [user, refreshUser]
-  );
+
 
   const value: Auth = useMemo(
     () => ({
@@ -139,7 +135,6 @@ export const AuthProvider = ({ children }: Props) => {
       signin,
       refreshUser,
       register,
-      updateUser,
       isFetching,
       isSignInError,
       isRegisterError,
@@ -153,7 +148,6 @@ export const AuthProvider = ({ children }: Props) => {
       signin,
       refreshUser,
       register,
-      updateUser,
       isFetching,
       isSignInError,
       isRegisterError,

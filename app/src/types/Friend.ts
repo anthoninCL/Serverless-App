@@ -1,8 +1,9 @@
 import { User } from "./User";
 
-export type friend = {
+export type Friend = {
+  id: string;
   users: [string, string];
   createdAt: Date;
   updatedAt: Date;
-  messages: [string];
+  messages: string[] | null;
 };
