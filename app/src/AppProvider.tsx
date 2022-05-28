@@ -1,9 +1,13 @@
-import React, { Suspense } from 'react';
-import { Text } from 'react-native';
-import { LoadingProvider } from 'providers/LoadingProvider';
-import { ThemeProvider } from 'providers/ThemeProvider';
+import React, { Suspense } from "react";
+import { Text } from "react-native";
+import { LoadingProvider } from "providers/LoadingProvider";
+import { ThemeProvider } from "providers/ThemeProvider";
 import { AuthProvider } from "providers/AuthProvider";
-import {AlertProvider} from "./providers/AlertProvider";
+import { UserProvider } from "./providers/UserProvider";
+import { AlertProvider } from "./providers/AlertProvider";
+import { TeamProvider } from "./providers/TeamProvider";
+import { FriendProvider } from "./providers/FriendProvider";
+import { ChannelProvider } from "./providers/ChannelProvider";
 
 type Props = {
   children: JSX.Element;
@@ -15,7 +19,13 @@ const AppProvider = ({ children }: Props) => (
       <LoadingProvider>
         <AlertProvider>
           <AuthProvider>
-            {children}
+            <UserProvider>
+              <FriendProvider>
+                <ChannelProvider>
+                  <TeamProvider>{children}</TeamProvider>
+                </ChannelProvider>
+              </FriendProvider>
+            </UserProvider>
           </AuthProvider>
         </AlertProvider>
       </LoadingProvider>

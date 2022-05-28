@@ -13,9 +13,9 @@ export const teamIsAuthorized = async (req: Request, res: Response, next: NextFu
     } else {
       isAuthorized({hasRole: ["admin"]})(req, res, next);
     }
+  } else {
+    res.status(404).send("Team not found");
   }
-
-  res.status(404).send("Team not found");
 };
 
 teamIdRouter.get("/:teamId", async (req, res) => {
@@ -23,7 +23,7 @@ teamIdRouter.get("/:teamId", async (req, res) => {
   db.collection(teamCollection).doc(teamId).get()
       .then((team) => {
         if (!team.exists) throw new Error("Team not found");
-        if (team.data()?.members.includes(res.locals.uid) || res.locals.role == "admin") {
+        if (team.data()?.members.includes(res.locals.uid) || res.locals.roles.includes("admin")) {
           res.status(200).json({id: team.id, data: team.data()});
         } else {
           throw new Error("Not authorized");

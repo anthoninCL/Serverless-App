@@ -29,7 +29,7 @@ teamRouter.get("/team", async (req, res) => {
 
     teamQuerySnapshot.forEach(
         (doc) => {
-          if (doc.data().members.includes(res.locals.uid) || res.locals.role == "admin") {
+          if (doc.data().members.includes(res.locals.uid) || res.locals.roles.includes("admin")) {
             teams.push({
               id: doc.id,
               data: doc.data(),
@@ -55,7 +55,7 @@ teamRouter.post("/team", isAuthorized({hasRole: ["admin"]}), async (req, res) =>
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    res.status(200).json(`New team created: ${team.id}`);
+    res.status(200).json({id: team.id});
   } catch (e) {
     res.status(500).send(e);
   }

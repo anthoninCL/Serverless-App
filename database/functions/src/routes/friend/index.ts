@@ -20,7 +20,7 @@ friendRouter.get("/friend", async (req, res) => {
 
     friendQuerySnapshot.forEach(
         (doc) => {
-          if (doc.data().members.includes(res.locals.uid)) {
+          if (doc.data().users.includes(res.locals.uid)) {
             friends.push({
               id: doc.id,
               data: doc.data(),
@@ -49,7 +49,7 @@ friendRouter.post("/friend", async (req, res) => {
       messages: [],
     });
 
-    res.status(200).json(`New friendship created: ${friend.id}`);
+    res.status(200).json({id: friend.id});
   } catch (error) {
     res.status(500).send(error);
   }

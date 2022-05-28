@@ -63,7 +63,7 @@ messageRouter.post("/:teamId/channel/:channelId/message", async (req, res) => {
     await db.collection(channelCollection).doc(req.params.channelId).update({
       messages: admin.firestore.FieldValue.arrayUnion(message.id),
     });
-    res.status(200).json(`New message created: ${message.id}`);
+    res.status(200).json({id: message.id});
   } catch (error) {
     res.status(500).send(error);
   }

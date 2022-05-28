@@ -1,96 +1,87 @@
-import React, {useEffect, useState} from 'react';
-import {Text} from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RootStackParamList} from 'navigation/RootStackParamList';
-import {MainLayout} from "../../components/layouts/MainLayout/MainLayout";
-import {Team} from "../../types/Team";
-import {User} from "../../types/User";
-import {Channel} from "../../types/Channel";
-import {Friend} from "../../types/Friend";
+import React, { useCallback, useEffect, useState } from "react";
+import { View } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "navigation/RootStackParamLis";
+import { MainLayout } from "../../components/layouts/MainLayout/MainLayout";
+import { MessageComponent } from "../../components/common/ChatMessage/ChatMessage";
+import { Message } from "../../types/Message";
+import { User } from "../../types/User";
+import dayjs from "dayjs";
+import { GiftedChat, IMessage } from "react-native-gifted-chat";
+import { Team } from "../../types/Team";
+import { Channel } from "../../types/Channel";
+import { Friend } from "../../types/Friend";
+import { ViewCol } from "../../components/layouts/FlexLayout/FlexViews";
 import useAuth from "../../hooks/useAuth";
+import { ChatHeaderLayout } from "../../components/layouts/ChatHeaderLayout/ChatHeaderLayout";
+import useTeam from "../../hooks/useTeam";
+import useUser from "../../hooks/useUser";
+import useFriend from "../../hooks/useFriend";
+import useChannel from "../../hooks/useChannel";
 import {getStoredData} from "../../utils/fnAsyncStorage";
 
-export type ScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
+export type ScreenProps = NativeStackScreenProps<RootStackParamList, "home">;
 
-const HomeScreen = ({navigation}: ScreenProps) => {
+const HomeScreen = ({ navigation }: ScreenProps) => {
   const [currentTeam, setCurrentTeam] = useState(0);
   const [isCurrentConvPrivate, setCurrentConvPrivacy] = useState(false);
   const [currentConv, setCurrentConv] = useState(0);
   const { signout } = useAuth();
-  const firstTeam: Team = {
-    id: '1',
-    name: 'Watchelp',
-    members: null,
-    channels: null,
-    photo: ''
-  };
-  const secondTeam: Team = {
-    id: '2',
-    name: 'Juloa',
-    members: null,
-    channels: null,
-    photo: ''
-  };
-  const firstChannel: Channel = {
-    id: '1',
-    name: 'general',
-    createdAt: '',
-    posts: [],
-    messages: [],
-  };
-  const secondChannel: Channel = {
-    id: '2',
-    name: 'ciligo',
-    createdAt: '',
-    posts: [],
-    messages: [],
-  };
-  const firstUser: User = {
-    id: '1',
-    email: 'tompap@juloa.fr',
-    name: 'tompap',
-    firstName: 'Thomas',
-    lastName: 'Papin',
-    photo: '',
-  };
-  const secondUser: User = {
-    id: '2',
-    email: 'loic.cahuzac@juloa.fr',
-    name: 'Loïc',
-    firstName: 'Loïc',
-    lastName: 'Cahuzac',
-    photo: '',
-  };
-  const currentUser: User = {
-    id: '0',
-    email: 'anthonin.clara@juloa.fr',
-    name: 'AnthoninC.',
-    firstName: 'Anthonin',
-    lastName: 'Clara',
-    photo: ''
-  };
-  const firstFriend: Friend = {
-    friendId: firstUser,
-    userId: currentUser,
-    createdAt: '',
-  };
-  const secondFriend: Friend = {
-    friendId: secondUser,
-    userId: currentUser,
-    createdAt: ''
-  };
-  const teams = [firstTeam, secondTeam];
-  const channels = [firstChannel, secondChannel];
-  const friends = [firstFriend, secondFriend];
+  const { fetchTeams, teams, isFetching: isTeamFetching } = useTeam();
+  const { fetchFriends, friends } = useFriend();
+  const { fetchChannels, channels } = useChannel();
+  const { fetchUsers, users, fetchUser } = useUser();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const uid = await getStoredData('uid');
+      console.log("Le uid le david => ", uid);
+      const res = await fetchUser(uid);
+      console.log("Le res de ses morts => ", res);
+      setUser(res);
+    }
+
+    getUser().catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    fetchTeams();
+    fetchFriends();
+    fetchUsers();
+  }, []);
+
+  console.log(friends);
+  //console.log(team);
+
   //const {theme} = useTheme();
   //const styles = fnStyles(theme);
 
-  // TODO move the two next functions to AuthProvider
+  /*const renderMessage = (props) => {
+    return (
+      <View>
+        <ViewCol>
+          <MessageComponent
+            previousMessage={props.previousMessage}
+            currentMessage={props.currentMessage}
+            nextMessage={props.nextMessage}
+            // TODO: regarder si le message est un post ou non pour changer la couleur
+            backgroundColor={
+              props.currentMessage.user._id === users[0].id
+                ? "#E4E4E4"
+                : "white"
+            }
+          />
+        </ViewCol>
+      </View>
+    );
+  };*/
+
   const signOut = () => {
     signout();
     navigation.reset({
       index: 0,
-      routes: [{ name: 'login'}],
+      routes: [{ name: "login" }],
     });
   };
 
@@ -98,12 +89,12 @@ const HomeScreen = ({navigation}: ScreenProps) => {
     // deleteAccount(currentUser.id);
     navigation.reset({
       index: 0,
-      routes: [{ name: 'login'}],
+      routes: [{ name: "login" }],
     });
   };
 
   // TODO remove comments when authentication is on
-  /*useEffect(() => {
+  useEffect(() => {
     const checkToken = async () => {
       const token = await getStoredData('token');
       if (!token) {
@@ -115,25 +106,49 @@ const HomeScreen = ({navigation}: ScreenProps) => {
     }
 
     checkToken().catch(console.error);
-  }, []);*/
+  }, []);
 
   return (
-    <MainLayout
-      currentTeam={currentTeam}
-      isCurrentConvPrivate={isCurrentConvPrivate}
-      currentConv={currentConv}
-      onTeamClicked={setCurrentTeam}
-      setCurrentConvPrivacy={setCurrentConvPrivacy}
-      onConvClicked={setCurrentConv}
-      teams={teams}
-      channels={channels}
-      friends={friends}
-      currentUser={currentUser}
-      signOut={signOut}
-      deleteAccount={deleteAccount}
-    >
-      <Text>TEST</Text>
-    </MainLayout>
+    <>
+      {!isTeamFetching ? (
+        <MainLayout
+          currentTeam={currentTeam}
+          isCurrentConvPrivate={isCurrentConvPrivate}
+          currentConv={currentConv}
+          onTeamClicked={setCurrentTeam}
+          setCurrentConvPrivacy={setCurrentConvPrivacy}
+          setCurrentTeam={setCurrentTeam}
+          onConvClicked={setCurrentConv}
+          teams={teams}
+          channels={channels}
+          friends={friends}
+          currentUser={user}
+          signOut={signOut}
+          deleteAccount={deleteAccount}
+          users={users}
+        >
+          {/*<GiftedChat
+            messages={messages}
+            onSend={(messages) => onMessageSend(messages)}
+            user={{
+              _id:
+                messages && messages.length % 5 === 0
+                  ? users[0].id
+                  : users[1].id,
+              name:
+                messages && messages.length % 5 === 0
+                  ? users[0].name
+                  : users[1].name,
+              avatar: undefined,
+            }}
+            placeholder="Type you message here..."
+            renderMessage={(renderMessage)}
+          />*/}
+        </MainLayout>
+      ) : (
+        <View />
+      )}
+    </>
   );
 };
 

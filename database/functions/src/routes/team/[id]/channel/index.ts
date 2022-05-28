@@ -51,7 +51,7 @@ channelRouter.post("/:teamId/channel", isAuthorized({hasRole: ["admin", "manager
     await db.collection(teamCollection).doc(req.params.teamId).update({
       channels: admin.firestore.FieldValue.arrayUnion(channel.id),
     });
-    res.status(200).json(`New channel created: ${channel.id}`);
+    res.status(200).json({id: channel.id});
   } catch (e) {
     res.status(500).send(e);
   }
