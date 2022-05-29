@@ -45,9 +45,9 @@ const postIsAuthorized = async (req: Request, res: Response, next: NextFunction)
     } else {
       isAuthorized({hasRole: ["admin", "manager"]})(req, res, next);
     }
+  } else {
+    res.status(404).send("Post not found");
   }
-
-  res.status(404).send("Post not found");
 };
 
 postIdRouter.delete("/:teamId/channel/:channelId/post/:postId", postIsAuthorized, async (req, res) => {

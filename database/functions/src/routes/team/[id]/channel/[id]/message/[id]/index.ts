@@ -45,9 +45,9 @@ const messageIsAuthorized = async (req: Request, res: Response, next: NextFuncti
     } else {
       isAuthorized({hasRole: ["admin", "manager"]})(req, res, next);
     }
+  } else {
+    res.status(404).send("Message not found");
   }
-
-  res.status(404).send("Message not found");
 };
 
 messageIdRouter.delete("/:teamId/channel/:channelId/message/:messageId", messageIsAuthorized, async (req, res) => {

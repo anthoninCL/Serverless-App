@@ -37,9 +37,9 @@ const messageIsAuthorized = async (req: Request, res: Response, next: NextFuncti
     } else {
       isAuthorized({hasRole: ["admin"]})(req, res, next);
     }
+  } else {
+    res.status(404).send("Message not found");
   }
-
-  res.status(404).send("Message not found");
 };
 
 messageIdRouter.delete("/:friendId/message/:messageId", messageIsAuthorized, async (req, res) => {
