@@ -3,7 +3,7 @@ import {teamIsAuthorized} from "../../../../index";
 import admin, {
   channelCollection,
   db,
-  messageCollection,
+  messageChannelCollection,
   teamCollection,
 } from "../../../../../../../firebase-service";
 import {isAuthorized} from "../../../../../../../middlewares/authorize";
@@ -30,14 +30,14 @@ messageIdRouter.get("/:teamId/channel/:channelId/message/:messageId", async (req
   if (!channel.data()?.messages.includes(req.params.messageId)) {
     res.status(404).send("Message not found");
   }
-  db.collection(messageCollection).doc(messageId).get()
+  db.collection(messageChannelCollection).doc(messageId).get()
       .then((message) => {
         res.status(200).json({id: message.id, data: message.data()});
       }).catch((error) => res.status(500).send(error));
 });
 
 const messageIsAuthorized = async (req: Request, res: Response, next: NextFunction) => {
-  const message = await db.collection(messageCollection).doc(req.params.messageId).get();
+  const message = await db.collection(messageChannelCollection).doc(req.params.messageId).get();
 
   if (message.exists) {
     if (message.data()?.user === res.locals.uid) {
@@ -45,9 +45,9 @@ const messageIsAuthorized = async (req: Request, res: Response, next: NextFuncti
     } else {
       isAuthorized({hasRole: ["admin", "manager"]})(req, res, next);
     }
+  } else {
+    res.status(404).send("Message not found");
   }
-
-  res.status(404).send("Message not found");
 };
 
 messageIdRouter.delete("/:teamId/channel/:channelId/message/:messageId", messageIsAuthorized, async (req, res) => {
@@ -70,7 +70,7 @@ messageIdRouter.delete("/:teamId/channel/:channelId/message/:messageId", message
   }
 
   try {
-    await db.collection(messageCollection).doc(messageId).delete();
+    await db.collection(messageChannelCollection).doc(messageId).delete();
     await db.collection(channelCollection).doc(channelId).update({
       messages: admin.firestore.FieldValue.arrayRemove(messageId),
     });
@@ -99,7 +99,7 @@ messageIdRouter.put("/:teamId/channel/:channelId/message/:messageId", messageIsA
     res.status(404).send("Message not found");
   }
 
-  await db.collection(messageCollection).doc(messageId).set(req.body, {merge: true})
+  await db.collection(messageChannelCollection).doc(messageId).set(req.body, {merge: true})
       .then(() => res.json({id: messageId}))
       .catch((error) => res.status(500).send(error));
 });

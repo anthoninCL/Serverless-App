@@ -7,8 +7,6 @@ import {channelRouter} from "./[id]/channel";
 import {channelIdRouter} from "./[id]/channel/[id]";
 import {messageRouter} from "./[id]/channel/[id]/message";
 import {messageIdRouter} from "./[id]/channel/[id]/message/[id]";
-import {postRouter} from "./[id]/channel/[id]/post";
-import {postIdRouter} from "./[id]/channel/[id]/post/[id]";
 
 export const teamRouter = Router();
 
@@ -18,8 +16,6 @@ teamRouter.use("/team", channelRouter);
 teamRouter.use("/team", channelIdRouter);
 teamRouter.use("/team", messageRouter);
 teamRouter.use("/team", messageIdRouter);
-teamRouter.use("/team", postRouter);
-teamRouter.use("/team", postIdRouter);
 
 
 teamRouter.get("/team", async (req, res) => {

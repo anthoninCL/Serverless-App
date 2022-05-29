@@ -3,7 +3,7 @@ import {teamIsAuthorized} from "../../../index";
 import admin, {
   channelCollection,
   db,
-  messageCollection,
+  messageChannelCollection,
   teamCollection,
 } from "../../../../../../firebase-service";
 
@@ -13,7 +13,7 @@ messageRouter.use("/:teamId/channel/:channelId/message", teamIsAuthorized);
 
 messageRouter.get("/:teamId/channel/:channelId/message", async (req, res) => {
   try {
-    const messageQuerySnapshot = await db.collection(messageCollection).get();
+    const messageQuerySnapshot = await db.collection(messageChannelCollection).get();
     const team = await db.collection(teamCollection).doc(req.params.teamId).get();
     const channel = await db.collection(channelCollection).doc(req.params.channelId).get();
     const messages: any[] = [];
@@ -54,7 +54,7 @@ messageRouter.post("/:teamId/channel/:channelId/message", async (req, res) => {
     if (!req.body.content) {
       res.status(400).send("content is required");
     }
-    const message = await db.collection(messageCollection).add({
+    const message = await db.collection(messageChannelCollection).add({
       content: req.body.content,
       createdAt: new Date(),
       updatedAt: new Date(),
