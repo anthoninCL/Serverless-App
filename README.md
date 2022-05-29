@@ -4,7 +4,7 @@
 
 ## Set up
 
-This project is divided in two main parts. There is the web application and our router used in our firebase console through a cloud function (as you can see in the firebase documentation clicking [here]([https://www.figma.com/file/f1hUvDjGJOyvWnQnPnrROc/myCompany?node-id=0%3A1](https://firebase.google.com/docs/hosting/functions#use_a_web_framework))).
+This project is divided in two main parts. There is the web application and our router used in our firebase console through a cloud function (as you can see in the firebase documentation clicking [here](https://firebase.google.com/docs/hosting/functions#use_a_web_framework)).
 
 ### Web App
 
