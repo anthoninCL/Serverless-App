@@ -22,8 +22,6 @@ export const ManageChannelModal = (props: Props) => {
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const { deleteChannel, updateChannel } = useChannel();
 
-  console.log("hehehehehe ", props.currentChannel);
-
   useEffect(() => {
     setButtonEnabled(name.length > 0 && name != props.currentChannel?.name);
   }, [name]);
@@ -43,11 +41,15 @@ export const ManageChannelModal = (props: Props) => {
         <FormInput value={name} onChange={setName} backgroundColor={'white'} placeholderKey={"common.workspaceName"} style={{marginBottom: 20}}/>
         <ViewRow justify={'space-between'} align={'center'} style={{marginTop: 20}}>
           <ClassicButton onPress={() => {
-            deleteChannel(props.currentTeam, props.currentChannel.id);
+            if (props.currentTeam && props.currentChannel.id) {
+              deleteChannel(props.currentTeam, props.currentChannel.id);
+            }
             props.onBackDropPress();
           }} labelKey={"common.delete"} type={'danger'} />
           <ClassicButton onPress={() => {
-            updateChannel(props.currentTeam, props.currentChannel.id, name, props.currentChannel.messages as string[], props.currentChannel.posts as string[]);
+            if (props.currentTeam && props.currentChannel.id) {
+              updateChannel(props.currentTeam, props.currentChannel.id, name, props.currentChannel.messages as string[], props.currentChannel.posts as string[]);
+            }
             props.onBackDropPress();
           }} labelKey={"common.update"} type={'classic'} enabled={buttonEnabled} />
         </ViewRow>

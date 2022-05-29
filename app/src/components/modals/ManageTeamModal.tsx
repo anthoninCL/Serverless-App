@@ -31,25 +31,29 @@ export const ManageTeamModal = (props: Props) => {
   const { updateTeam, deleteTeam, refreshTeams } = useTeam();
 
   const handleModifyTeam = () => {
-    updateTeam(
-      props.currentTeam.id,
-      name,
-      selectedIds,
-      props.currentTeam.channels,
-      props.currentTeam.photo
-    );
+    if (props.currentTeam.id) {
+      updateTeam(
+        props.currentTeam.id,
+        name,
+        selectedIds,
+        props.currentTeam.channels,
+        props.currentTeam.photo
+      );
+    }
   };
 
   const handleDeleteTeam = async () => {
-    await deleteTeam(props.currentTeam.id);
-    for (var team of props.teams) {
-      if (team.id != props.currentTeam.id) {
-        props.setCurrentTeam(team);
-        console.log("j'ai choisi: ", team);
-        break;
+    if (props.currentTeam.id) {
+      await deleteTeam(props.currentTeam.id);
+      for (var team of props.teams) {
+        if (team.id != props.currentTeam.id) {
+          props.setCurrentTeam(team);
+          console.log("j'ai choisi: ", team);
+          break;
+        }
       }
+      await refreshTeams();
     }
-    await refreshTeams();
   };
 
   useEffect(() => {

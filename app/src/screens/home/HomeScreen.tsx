@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import {ActivityIndicator, View} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "navigation/RootStackParamLis";
 import { MainLayout } from "../../components/layouts/MainLayout/MainLayout";
@@ -19,6 +19,7 @@ import useUser from "../../hooks/useUser";
 import useFriend from "../../hooks/useFriend";
 import useChannel from "../../hooks/useChannel";
 import {getStoredData} from "../../utils/fnAsyncStorage";
+import {useMessage} from "../../hooks/useMessage";
 
 export type ScreenProps = NativeStackScreenProps<RootStackParamList, "home">;
 
@@ -28,17 +29,19 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
   const [currentConv, setCurrentConv] = useState(0);
   const { signout } = useAuth();
   const { fetchTeams, teams, isFetching: isTeamFetching } = useTeam();
-  const { fetchFriends, friends } = useFriend();
+  const { fetchFriends, friends, fetchFriendMessages, sendFriendMessages, isMessagesFetching } = useFriend();
+  const { fetchChannelMessages, sendChannelMessages, isMessagesFetching: isChannelMessagesFetching } = useMessage();
   const { fetchChannels, channels } = useChannel();
   const { fetchUsers, users, fetchUser } = useUser();
   const [user, setUser] = useState<User | null>(null);
+  const [messages, setMessages] = useState<IMessage[]>();
+  const [realMessages, setRealMessages] = useState<Message[]>([]);
+  const [needToRefresh, setNeedToRefresh] = useState(0);
 
   useEffect(() => {
     const getUser = async () => {
       const uid = await getStoredData('uid');
-      console.log("Le uid le david => ", uid);
       const res = await fetchUser(uid);
-      console.log("Le res de ses morts => ", res);
       setUser(res);
     }
 
@@ -51,13 +54,40 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     fetchUsers();
   }, []);
 
-  console.log(friends);
-  //console.log(team);
+  useEffect(() => {
+    const getMessages = async () => {
+      if (friends && friends[currentConv]) {
+        const fetchedMessages = await fetchFriendMessages(friends[currentConv].id);
+        if (fetchedMessages && fetchedMessages.length > 0) {
+          setRealMessages(fetchedMessages);
+        } else {
+          setRealMessages([]);
+        }
+      }
+    };
+
+    const getChannelMessages = async () => {
+      if (channels && channels[currentConv] && teams && teams[currentTeam]) {
+        const fetchedMessages = await fetchChannelMessages(teams[currentTeam]?.id, channels[currentConv].id);
+        if (fetchedMessages && fetchedMessages.length > 0) {
+          setRealMessages(fetchedMessages);
+        } else {
+          setRealMessages([]);
+        }
+      }
+    };
+
+    if (isCurrentConvPrivate) {
+      getMessages().catch(console.error);
+    } else {
+      getChannelMessages().catch(console.error);
+    }
+  }, [currentConv, isCurrentConvPrivate, needToRefresh, friends, channels]);
 
   //const {theme} = useTheme();
   //const styles = fnStyles(theme);
 
-  /*const renderMessage = (props) => {
+  const renderMessage = (props) => {
     return (
       <View>
         <ViewCol>
@@ -65,17 +95,20 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
             previousMessage={props.previousMessage}
             currentMessage={props.currentMessage}
             nextMessage={props.nextMessage}
+            messages={messages}
+            currentFriend={friends[currentConv]?.id}
+            currentChannel={channels[currentConv]?.id}
+            currentTeam={teams[currentTeam]?.id}
+            isCurrentConvPrivate={isCurrentConvPrivate}
+            setMessages={setMessages}
+            setNeedToRefresh={setNeedToRefresh}
             // TODO: regarder si le message est un post ou non pour changer la couleur
-            backgroundColor={
-              props.currentMessage.user._id === users[0].id
-                ? "#E4E4E4"
-                : "white"
-            }
+            backgroundColor={"white"}
           />
         </ViewCol>
       </View>
     );
-  };*/
+  };
 
   const signOut = () => {
     signout();
@@ -108,6 +141,44 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     checkToken().catch(console.error);
   }, []);
 
+  useEffect(() => {
+    const prepareMessages = realMessages?.map((message: Message, index: number) => {
+      return {
+        _id: `old_${message.id}`,
+        text: message.content,
+        createdAt: new Date(message.createdAt._seconds * 1000),
+        user: {
+          _id: typeof message.user !== "string" ? message.user?.id : undefined,
+          name: typeof message.user !== "string" ? message.user?.name : undefined,
+          avatar: undefined,
+        },
+      };
+    }) as IMessage[];
+    if (prepareMessages) {
+      const orderedMessages = prepareMessages.reverse();
+      if (!isMessagesFetching && !isChannelMessagesFetching) {
+        setMessages(orderedMessages);
+      }
+    }
+  }, [realMessages, isMessagesFetching, isChannelMessagesFetching]);
+
+  const onMessageSend = useCallback((messages: IMessage[] = []) => {
+    if (isCurrentConvPrivate) {
+      if (friends === undefined || friends[currentConv] === undefined) {
+        return;
+      }
+      sendFriendMessages(friends[currentConv].id, messages[0].text);
+    } else {
+      if (channels === undefined || channels[currentConv] === undefined || teams === undefined || teams[currentTeam] === undefined) {
+        return;
+      }
+      sendChannelMessages(teams[currentTeam].id, channels[currentConv].id, messages[0].text);
+    }
+    setMessages(previousMessages => {
+      return GiftedChat.append(previousMessages, messages);
+    })
+  }, [friends, channels, currentConv]);
+
   return (
     <>
       {!isTeamFetching ? (
@@ -127,23 +198,19 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
           deleteAccount={deleteAccount}
           users={users}
         >
-          {/*<GiftedChat
+          {!isMessagesFetching && !isChannelMessagesFetching ?
+          <GiftedChat
             messages={messages}
-            onSend={(messages) => onMessageSend(messages)}
+            onSend={onMessageSend}
             user={{
-              _id:
-                messages && messages.length % 5 === 0
-                  ? users[0].id
-                  : users[1].id,
-              name:
-                messages && messages.length % 5 === 0
-                  ? users[0].name
-                  : users[1].name,
+              _id: user?.id || '',
+              name: user?.name || '',
               avatar: undefined,
             }}
             placeholder="Type you message here..."
             renderMessage={(renderMessage)}
-          />*/}
+          /> : <ActivityIndicator/>
+          }
         </MainLayout>
       ) : (
         <View />

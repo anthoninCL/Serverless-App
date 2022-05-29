@@ -1,19 +1,14 @@
-import React, { createContext, useCallback, useMemo, useState } from "react";
-import { Message } from "../types/Message";
-import { useTranslation } from "react-i18next";
+import React, {createContext, useCallback, useMemo, useState} from "react";
+import {Message} from "../types/Message";
 import fetchJSON from "../utils/fetchJSON";
-import { formatData, formatSimpleData } from "../utils/formatData";
+import {formatData} from "../utils/formatData";
 
 type MessageProps = {
-  message: Message;
-  messages: Message[];
-  isFetching: boolean;
-  fetchMessage: (id: string) => {};
-  fetchMessages: () => {};
-  createMessage: (name: string, members: Array<string>) => {};
-  updateMessage: (id: string, name?: string, members?: Array<string>, channels?: Array<string>, photo?: string) => {};
-  deleteMessage: (id: string) => {};
-  refreshMessages: () => {};
+  fetchChannelMessages: (currentTeam: string, channelId: string) => Message[];
+  isMessagesFetching: boolean;
+  sendChannelMessages: (currentTeam: string, channelId: string, content: string) => {};
+  deleteChannelMessages: (currentTeam: string, channelId: string, messageId: string) => {};
+  updateChannelMessages: (currentTeam: string, channelId: string, messageId: string, content: string) => {};
 };
 
 export const MessageContext = createContext<MessageProps>({} as MessageProps);
@@ -22,156 +17,75 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const MessageProvider = ({ children }: Props) => {
-  const { t } = useTranslation();
-  const [message, setMessage] = useState<Message>();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isFetching, setIsFetching] = useState(false);
+export const MessageProvider = ({children}: Props) => {
+  const [isMessagesFetching, setIsMessagesFetching] = useState(false);
 
-  // Fetch one Message by id
-  const fetchMessage = useCallback(async (id: string) => {
+  const fetchChannelMessages = useCallback(async (currentTeam: string, channelId: string) => {
     try {
-      setIsFetching(true);
+      setIsMessagesFetching(true);
       const res = await fetchJSON({
-        url: `Message/${id}`,
+        url: `team/${currentTeam}/channel/${channelId}/message`,
         method: "GET",
       });
-      const formatedRes = formatSimpleData(res);
-      setMessage(formatedRes as unknown as Message);
-      setIsFetching(false);
 
-      return formatedRes;
-    } catch (e) {
-      console.log(e);
-    }
-    return null;
-  }, []);
-
-  // Get list of Messages
-  const fetchMessages = useCallback(async () => {
-    try {
-      setIsFetching(true);
-      const res = await fetchJSON({
-        url: `Message`,
-        method: "GET",
-      });
       const formatedRes = formatData(res);
-      setMessages(formatedRes as unknown as Message[]);
-      setIsFetching(false);
-
+      setIsMessagesFetching(false);
       return formatedRes;
     } catch (e) {
       console.log(e);
     }
-    return null;
   }, []);
 
-  // Refresh Messages list
-  const refreshMessages = useCallback(async () => {
+  const sendChannelMessages = useCallback(async (currentTeam: string, channelId: string, content: string) => {
     try {
-      setIsFetching(true);
-      const res = await fetchJSON({
-        url: `Message`,
-        method: "GET",
+      const payload = {
+        content
+      };
+      await fetchJSON({
+        url: `team/${currentTeam}/channel/${channelId}/message`,
+        method: "POST",
+        payload
       });
-      const formatedRes = formatData(res);
-      setMessages(formatedRes as unknown as Message[]);
-      setIsFetching(false);
-
-      return formatedRes;
     } catch (e) {
       console.log(e);
     }
-    return null;
   }, []);
 
-  const createMessage = useCallback(
-    async (name: string, members: Array<string>) => {
-      const payload = {
-        name,
-        members,
-      };
-      try {
-        await fetchJSON({
-          url: `Message`,
-          method: "POST",
-          payload,
-        });
-        await refreshMessages();
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    []
-  );
-
-  const updateMessage = useCallback(
-    async (
-      id: string,
-      name?: string,
-      members?: Array<string>,
-      channels?: Array<string>,
-      photo?: string
-    ) => {
-      const payload = {
-        name,
-        members,
-        channels,
-        photo,
-      };
-      try {
-        await fetchJSON({
-          url: `Message/${id}`,
-          method: "PUT",
-          payload,
-        });
-        await refreshMessages();
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    []
-  );
-
-  // Delete one Message by id
-  const deleteMessage = useCallback(async (id: string) => {
+  const updateChannelMessages = useCallback(async (currentTeam: string, channelId: string, messageId: string, content: string) => {
     try {
-      setIsFetching(true);
-      const res = await fetchJSON({
-        url: `Message/${id}`,
+      const payload = {
+        content
+      };
+      await fetchJSON({
+        url: `team/${currentTeam}/channel/${channelId}/message/${messageId}`,
+        method: "PUT",
+        payload
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  const deleteChannelMessages = useCallback(async (currentTeam: string, channelId: string, messageId: string) => {
+    try {
+      await fetchJSON({
+        url: `team/${currentTeam}/channel/${channelId}/message/${messageId}`,
         method: "DELETE",
       });
-      setIsFetching(false);
-      return true;
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
-    return false;
   }, []);
 
   const value: MessageProps = useMemo(
     () => ({
-      message,
-      messages,
-      isFetching,
-      fetchMessage,
-      fetchMessages,
-      createMessage,
-      updateMessage,
-      deleteMessage,
-      refreshMessages,
+      fetchChannelMessages,
+      isMessagesFetching,
+      sendChannelMessages,
+      updateChannelMessages,
+      deleteChannelMessages
     }),
-    [
-      message,
-      messages,
-      isFetching,
-      fetchMessage,
-      fetchMessages,
-      createMessage,
-      updateMessage,
-      deleteMessage,
-      refreshMessages,
-    ]
+    [fetchChannelMessages, isMessagesFetching, sendChannelMessages, updateChannelMessages, deleteChannelMessages]
   );
 
   return <MessageContext.Provider value={value}>{children}</MessageContext.Provider>;

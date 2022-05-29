@@ -84,9 +84,13 @@ export const ChatHeaderLayout = (props: Props) => {
           <ViewRow style={{ paddingRight: 10, }}>
             <Button onPress={() => {
               if (!props.isCurrentConvPrivate) {
-                deleteChannel(props.currentTeam, props.channels[props.currentConv].id);
+                if (props.currentTeam && props.channels && props.channels[props.currentConv]) {
+                  deleteChannel(props.currentTeam, props.channels[props.currentConv].id);
+                }
               } else {
-                deleteFriend(props.friends[props.currentConv].id);
+                if (props.friends && props.friends[props.currentConv]) {
+                  deleteFriend(props.friends[props.currentConv].id);
+                }
               }
             }}>
               <Icon name={"trash"} colorName={"statusDangerHigh"}/>

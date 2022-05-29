@@ -26,10 +26,10 @@ export const UserModal = (props: Props) => {
       setUser(res);
     }
 
-    if (!props.currentUser) {
+    if (!props.currentUser || props.isModalVisible) {
       getUser().catch(console.error);
     }
-  }, [props.currentUser]);
+  }, [props.currentUser, props.isModalVisible]);
 
   return (props.isModalVisible &&
       <ViewCol style={{

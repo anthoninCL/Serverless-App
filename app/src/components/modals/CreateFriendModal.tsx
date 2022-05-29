@@ -80,6 +80,7 @@ export const CreateFriendModal = (props: Props) => {
           <ClassicButton
             onPress={() => {
               addFriend(selectedId[0]);
+              props.onBackDropPress();
             }}
             labelKey={"common.create"}
             type={"classic"}
