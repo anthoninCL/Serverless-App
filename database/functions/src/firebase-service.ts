@@ -10,7 +10,7 @@ export const groupCollection = "groups";
 export const teamCollection = "teams";
 export const channelCollection = "channels";
 export const messageCollection = "messages";
-export const postCollection = "posts";
+export const messageChannelCollection = "posts";
 export const friendCollection = "friends";
 
 export default admin;
