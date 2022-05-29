@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle, no-use-before-define */
 
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react'
 import {
   Text,
   StyleSheet,
@@ -13,7 +13,7 @@ import {
 import {
   MessageText,
   Time,
-  IMessage,
+  IMessage, GiftedChat,
 } from 'react-native-gifted-chat'
 import {User} from "../../../types/User";
 
@@ -21,6 +21,9 @@ import { userIsSame, dayIsTheSame } from "./ChatMessage";
 import {Button} from "../Button/Button";
 import {Icon} from "../Icon/Icon";
 import {ViewCol, ViewRow} from "../../layouts/FlexLayout/FlexViews";
+import useFriend from "../../../hooks/useFriend";
+import {FormInput} from "../FormInput/FormInput";
+import {useMessage} from "../../../hooks/useMessage";
 
 type Props = {
   touchableProps?: object;
@@ -48,9 +51,31 @@ type Props = {
     left?: any,
     right?: any,
   },
+  messages?: IMessage[],
+  currentFriend?: string,
+  currentChannel?: string,
+  currentTeam?: string,
+  isCurrentConvPrivate?: boolean,
+  setMessages?: Dispatch<SetStateAction<IMessage[]>>;
+  setNeedToRefresh: Dispatch<SetStateAction<number>>;
 }
 
 export const MessageContent = (props: Props) => {
+  const { deleteFriendMessages, updateFriendMessages } = useFriend();
+  const { deleteChannelMessages, updateChannelMessages } = useMessage();
+  const [update, setUpdate] = useState(false);
+  const [content, setContent] = useState(props.currentMessage.text);
+
+  useEffect(() => {
+    if (update) {
+      setContent(props.currentMessage.text);
+    } else {
+      if (content != props.currentMessage.text && content.length > 0) {
+        onUpdateMessage(props.currentMessage).catch(console.error);
+      }
+      setContent('');
+    }
+  }, [update]);
 
   const renderMessageText = () => {
     if (props.currentMessage.text) {
@@ -60,7 +85,7 @@ export const MessageContent = (props: Props) => {
         messageTextStyle,
         ...messageTextProps
       } = props
-      return (
+      return (update ? <FormInput value={content} onChange={setContent} backgroundColor={'white'} placeholderKey={"chat.yourMessage"} style={{width: "90%"}}/> :
         <MessageText
           containerStyle={{
             left: {width: '100%'},
@@ -114,7 +139,37 @@ export const MessageContent = (props: Props) => {
         {renderTime()}
       </>
     </View>
-  )
+  );
+
+  const onDeleteMessage = useCallback(async (message: IMessage) => {
+    if (props.isCurrentConvPrivate) {
+      if (props.currentFriend) {
+        await deleteFriendMessages(props.currentFriend, message._id.toString().split('old_')[1]);
+      }
+    } else {
+      if (props.currentTeam && props.currentChannel) {
+        await deleteChannelMessages(props.currentTeam, props.currentChannel, message._id.toString().split('old_')[1]);
+      }
+    }
+    props.setNeedToRefresh(currentValue => { return currentValue + 1 });
+  }, [props.currentFriend, props.currentChannel, props.messages, props.setMessages]);
+
+  const onUpdateMessage = useCallback(async (message: IMessage) => {
+    if (props.isCurrentConvPrivate) {
+      if (props.currentFriend) {
+        await updateFriendMessages(props.currentFriend, message._id.toString().split('old_')[1], content);
+      }
+    } else {
+      if (props.currentTeam && props.currentChannel) {
+        await updateChannelMessages(props.currentTeam, props.currentChannel, message._id.toString().split('old_')[1], content);
+      }
+    }
+    props.setNeedToRefresh(currentValue => { return currentValue + 1 });
+  }, [props.currentFriend, props.currentChannel, props.currentTeam, props.messages, props.setMessages, content]);
+
+  const toggleUpdate = () => {
+    setUpdate(!update);
+  };
 
   return (
     <View style={[styles.container, props.containerStyle]}>
@@ -131,10 +186,10 @@ export const MessageContent = (props: Props) => {
               </View>
               <View style={{ flex: 0, flexDirection: "row", justifyContent: "flex-end", alignItems: 'center'}}>
                 <ViewRow style={{ paddingRight: 10, }}>
-                  <Button onPress={() => console.log("Edit message id : ", props.currentMessage)}>
+                  <Button onPress={() => toggleUpdate()}>
                     <Icon name={"pencil"}/>
                   </Button>
-                  <Button onPress={() => console.log("Delete message id : ", props.currentMessage._id)}>
+                  <Button onPress={() => onDeleteMessage(props.currentMessage)}>
                     <Icon name={"trash"} colorName={"statusDangerHigh"}/>
                   </Button>
                 </ViewRow>

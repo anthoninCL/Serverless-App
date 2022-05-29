@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle, no-use-before-define */
 
-import React from 'react'
+import React, {Dispatch, SetStateAction} from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { Avatar, Day, IMessage } from 'react-native-gifted-chat'
@@ -39,6 +39,13 @@ type Props = {
   previousMessage?: IMessage;
   user?: User;
   backgroundColor?: string;
+  messages?: IMessage[];
+  currentFriend?: string;
+  currentChannel?: string,
+  currentTeam?: string,
+  isCurrentConvPrivate?: boolean,
+  setMessages?: Dispatch<SetStateAction<IMessage[]>>;
+  setNeedToRefresh: Dispatch<SetStateAction<number>>;
 }
 
 export const MessageComponent = (props: Props) => {

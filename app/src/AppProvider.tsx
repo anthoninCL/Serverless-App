@@ -8,6 +8,7 @@ import { AlertProvider } from "./providers/AlertProvider";
 import { TeamProvider } from "./providers/TeamProvider";
 import { FriendProvider } from "./providers/FriendProvider";
 import { ChannelProvider } from "./providers/ChannelProvider";
+import {MessageProvider} from "./providers/MessageProvider";
 
 type Props = {
   children: JSX.Element;
@@ -22,7 +23,9 @@ const AppProvider = ({ children }: Props) => (
             <UserProvider>
               <FriendProvider>
                 <ChannelProvider>
-                  <TeamProvider>{children}</TeamProvider>
+                  <MessageProvider>
+                    <TeamProvider>{children}</TeamProvider>
+                  </MessageProvider>
                 </ChannelProvider>
               </FriendProvider>
             </UserProvider>

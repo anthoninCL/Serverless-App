@@ -138,14 +138,14 @@ export const ConvLayout = (props: Props) => {
           })) : <ActivityIndicator />}
         {channelsOpen && (
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={toggleChannelModal}
             style={{ paddingVertical: 5, paddingHorizontal: 15 }}
           >
             <ViewRow align={"center"}>
               <ClickableIcon
                 type={"Entypo"}
                 name={"plus"}
-                onPress={toggleChannelModal}
+                onPress={() => {}}
                 colorName={"lightHighPlus"}
                 sizeName={"larger"}
                 style={{
@@ -235,14 +235,14 @@ export const ConvLayout = (props: Props) => {
           })) : <ActivityIndicator/>}
         {friendsOpen && (
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={toggleFriendModal}
             style={{ paddingVertical: 5, paddingHorizontal: 15 }}
           >
             <ViewRow align={"center"}>
               <ClickableIcon
                 type={"Entypo"}
                 name={"plus"}
-                onPress={toggleFriendModal}
+                onPress={() => {}}
                 colorName={"lightHighPlus"}
                 sizeName={"larger"}
                 style={{
