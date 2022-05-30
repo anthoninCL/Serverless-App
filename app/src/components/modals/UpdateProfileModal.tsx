@@ -34,8 +34,8 @@ export const UpdateProfileModal = (props: Props) => {
       const res = await fetchUser(uid);
       setUser(res);
       setName(res.name);
-      setFirstName(res.firstName);
-      setLastName(res.lastName);
+      setFirstName(res.firstName === 'test' ? '' : res.firstName);
+      setLastName(res.lastName === 'test' ? '' : res.lastName);
     }
 
     if (!props.currentUser) {
@@ -49,8 +49,8 @@ export const UpdateProfileModal = (props: Props) => {
 
   const onCancel = () => {
     setName(props.currentUser?.name);
-    setFirstName(props.currentUser?.firstName);
-    setLastName(props.currentUser?.lastName);
+    setFirstName(props.currentUser?.firstName == 'test' ? '' : props.currentUser?.firstName);
+    setLastName(props.currentUser?.lastName == 'test' ? '' : props.currentUser?.lastName);
     props.onBackDropPress();
   };
 

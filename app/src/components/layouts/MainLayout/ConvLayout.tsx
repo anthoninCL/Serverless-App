@@ -145,7 +145,7 @@ export const ConvLayout = (props: Props) => {
               <ClickableIcon
                 type={"Entypo"}
                 name={"plus"}
-                onPress={() => {}}
+                onPress={toggleChannelModal}
                 colorName={"lightHighPlus"}
                 sizeName={"larger"}
                 style={{
@@ -242,7 +242,7 @@ export const ConvLayout = (props: Props) => {
               <ClickableIcon
                 type={"Entypo"}
                 name={"plus"}
-                onPress={() => {}}
+                onPress={toggleFriendModal}
                 colorName={"lightHighPlus"}
                 sizeName={"larger"}
                 style={{

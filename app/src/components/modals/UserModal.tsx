@@ -63,7 +63,7 @@ export const UserModal = (props: Props) => {
               }}/>
               <ViewCol style={{marginLeft: 10}}>
                 <Text style={{fontWeight: 'bold', fontSize: 18}}>{user.name}</Text>
-                <Text>{user.firstName} {user.lastName}</Text>
+                <Text>{user.firstName === 'test' ? '' : user.firstName} {user.lastName === 'test' ? '' : user.lastName}</Text>
               </ViewCol>
             </ViewRow>
             <Divider color={'#B6B6B6'}/>

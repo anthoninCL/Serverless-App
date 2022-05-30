@@ -137,7 +137,9 @@ export const MainLayout = (props: Props) => {
           </ViewRow>
           <ViewRow style={{ flex: 1, height: "100%", backgroundColor: "#FFF" }}>
             <ViewCol>
-              <ChatHeaderLayout {...props} currentTeam={props.teams[currentTeam]?.id} />
+              {props.teams && props.teams[currentTeam] && (props.isCurrentConvPrivate ? props.friends && props.friends[props.currentConv] : props.channels && props.channels[props.currentConv]) &&
+                <ChatHeaderLayout {...props} currentTeam={props.teams[currentTeam]?.id}/>
+              }
               {props.children}
             </ViewCol>
           </ViewRow>
