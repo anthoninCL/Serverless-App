@@ -2,6 +2,11 @@
 
 ## Content Table
 
+
+- [Set up](#set-up)
+- [Data models](#data-models)
+- [Firestore Documentation](#firestore-documentation)
+
 ## Set up
 
 This project is divided in two main parts. There is the web application and our router used in our firebase console through a cloud function (as you can see in the firebase documentation clicking [here](https://firebase.google.com/docs/hosting/functions#use_a_web_framework)).
