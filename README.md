@@ -111,3 +111,45 @@ We have a router made with **Express** but you don't have anything to do to laun
   "user": "string",
 }
 ```
+## Firestore Documentation
+
+- Authentication methods (AuthProvider and useAuth):
+  - signin -> log to the app
+  - register -> log to the app after creating a user
+
+- User methods (UserProvider and useUser):
+  - fetchUsers -> GET
+  - fetchUser -> GET
+  - updateUser -> PUT
+  - deleteUser -> DELETE
+
+- Team methods (TeamProvider and useTeam):
+  - fetchTeam -> GET
+  - fetchTeams -> GET
+  - createTeam -> POST
+  - updateTeam -> PUT
+  - deleteTeam -> DELETE
+
+- Friend methods (FriendProvider and useFriend):
+  - fetchFriends -> GET
+  - addFriend -> POST
+  - deleteFriend -> DELETE
+
+- Channel methods (ChannelProvider and  useChannel):
+  - fetchChannel -> GET
+  - fetchChannels -> GET
+  - createChannel -> POST
+  - updateChannel -> PUT
+  - deleteChannel -> DELETE
+
+- Message methods (FriendProvider and useFriend):
+  - fetchFriendMessages -> GET
+  - sendFriendMessages -> POST
+  - updateFriendMessages -> PUT
+  - deleteFriendMessages -> DELETE
+
+- Channel Message methods (MessageProvider and useMessage):
+  - fetchChannelMessages -> GET
+  - sendChannelMessages -> POST
+  - updateChannelMessages -> PUT
+  - deleteChannelMessages -> DELETE
