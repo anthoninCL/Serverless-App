@@ -102,6 +102,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
             isCurrentConvPrivate={isCurrentConvPrivate}
             setMessages={setMessages}
             setNeedToRefresh={setNeedToRefresh}
+            user={user}
             // TODO: regarder si le message est un post ou non pour changer la couleur
             backgroundColor={"white"}
           />
@@ -148,7 +149,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
         text: message.content,
         createdAt: new Date(message.createdAt._seconds * 1000),
         user: {
-          _id: typeof message.user !== "string" ? message.user?.id : undefined,
+          _id: typeof message.user !== "string" ? message.user?.id : message.user,
           name: typeof message.user !== "string" ? message.user?.name : undefined,
           avatar: undefined,
         },
@@ -177,7 +178,7 @@ const HomeScreen = ({ navigation }: ScreenProps) => {
     setMessages(previousMessages => {
       return GiftedChat.append(previousMessages, messages);
     })
-  }, [friends, channels, currentConv]);
+  }, [friends, channels, currentConv, isCurrentConvPrivate]);
 
   return (
     <>

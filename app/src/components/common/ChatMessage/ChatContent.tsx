@@ -167,8 +167,10 @@ export const MessageContent = (props: Props) => {
     props.setNeedToRefresh(currentValue => { return currentValue + 1 });
   }, [props.currentFriend, props.currentChannel, props.currentTeam, props.messages, props.setMessages, content]);
 
-  const toggleUpdate = () => {
-    setUpdate(!update);
+  const toggleUpdate = async () => {
+    if (props.currentMessage.user._id as string === props.user.id) {
+      setUpdate(!update);
+    }
   };
 
   return (
@@ -189,7 +191,11 @@ export const MessageContent = (props: Props) => {
                   <Button onPress={() => toggleUpdate()}>
                     <Icon name={"pencil"}/>
                   </Button>
-                  <Button onPress={() => onDeleteMessage(props.currentMessage)}>
+                  <Button onPress={() => {
+                    if (props.currentMessage.user._id as string === props.user.id) {
+                      onDeleteMessage(props.currentMessage).catch(console.error);
+                    }
+                  }}>
                     <Icon name={"trash"} colorName={"statusDangerHigh"}/>
                   </Button>
                 </ViewRow>
